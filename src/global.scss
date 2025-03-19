@@ -1,0 +1,93 @@
+@use "sass:color"; // Import Sass color functions
+
+$primary-color: #007bff;
+$primary-hover: #0056b3;
+$bg-color: #f8f9fa;
+$border-color: #dee2e6;
+$text-color: #343a40;
+$primary-color-not-found: #ff4757;
+$bg-color-not-found: #f7f7f7;
+$text-color-not-found: #333;
+
+
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 10px;
+}
+
+h3 {
+  font-size: 2rem;
+}
+
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: $bg-color-not-found;
+  text-align: center;
+
+  h1 {
+    font-size: 8rem;
+    color: $primary-color-not-found;
+    margin: 0;
+  }
+
+  p {
+    font-size: 1.5rem;
+    color: $text-color-not-found;
+    margin-bottom: 20px;
+  }
+
+  .home-link {
+    font-size: 1.2rem;
+    color: white;
+    background: $primary-color-not-found;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: 0.3s;
+
+    &:hover {
+      background: color.adjust($primary-color-not-found, $lightness: -10%); // Fixed ✅
+    }
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3rem 1rem;
+  background-color: $bg-color;
+  border-bottom: 1px solid $border-color;
+
+  div {
+    display: flex;
+    gap: 1rem;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 2rem;
+    color: $text-color;
+  }
+
+  span {
+    cursor: pointer;
+    color: $primary-color;
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: $primary-hover;
+    }
+  }
+}
