@@ -23,10 +23,7 @@ const ProductCard: React.FC<Product> = ({
         </div>
         <div className="product-card__footer">
           <span className="product-card__price">${price!.toFixed(2)}</span>
-          <button
-            className="product-card__button"
-            disabled={quantity === 0} // Disable button if out of stock
-          >
+          <button className="product-card__button" disabled={quantity === 0}>
             Add to Cart
           </button>
         </div>

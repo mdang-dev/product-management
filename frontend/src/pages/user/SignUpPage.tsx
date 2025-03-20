@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../styles/RegisterPage.scss";
+import "../../styles/RegisterPage.scss";
 
 const RegisterPage: React.FC = () => {
   const [username, setUsername] = useState("");

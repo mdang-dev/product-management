@@ -11,11 +11,12 @@ import {
   X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../provider/AuthProvider";
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
-
+  const { user } = useAuth();
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };

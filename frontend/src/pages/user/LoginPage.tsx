@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../styles/LoginPage.scss";
+import "../../styles/LoginPage.scss";
+import { useAuth } from "../../provider/AuthProvider";
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Username:", username);
-    console.log("Password:", password);
+    login(username, password);
   };
 
   return (
