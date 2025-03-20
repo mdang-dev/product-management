@@ -1,0 +1,36 @@
+.footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid #ddd;
+  padding: 1rem 2rem;
+  text-align: center;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    &-item {
+      cursor: pointer;
+      font-size: 1rem;
+      color: #333;
+
+      &:hover {
+        color: blue; 
+      }
+    }
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #666;
+  }
+}

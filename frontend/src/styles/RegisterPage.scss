@@ -1,0 +1,100 @@
+.register-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #fff;
+
+  &__form {
+    background-color: #fff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    color: #333;
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    color: #007bff;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__label {
+    font-size: 1rem;
+    color: #555;
+  }
+
+  &__input {
+    padding: 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+    &:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+    }
+  }
+
+  &__button {
+    padding: 0.9rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &--secondary {
+      background-color: #f8f9fa;
+      color: #007bff;
+      border: 1px solid #007bff;
+
+      &:hover {
+        background-color: #e2e6ea;
+        color: #0056b3;
+      }
+    }
+  }
+
+  &__footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: black;
+
+    a {
+      color: #007bff;
+      text-decoration: underline;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: #0056b3;
+      }
+    }
+  }
+}
