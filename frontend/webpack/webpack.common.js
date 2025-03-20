@@ -5,7 +5,10 @@ const { type } = require("os");
 module.exports = {
   entry: path.resolve(__dirname, "..", "./src/index.tsx"),
   resolve: {
-    extensions: [".tsx", ".ts", ".js"],
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
+    extensions: [".js", ".jsx", ".ts", ".tsx", ".scss"],
   },
   module: {
     rules: [

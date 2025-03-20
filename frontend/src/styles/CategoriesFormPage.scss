@@ -1,0 +1,91 @@
+@use "sass:color";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+
+$primary-color: #1e88e5;
+$error-color: #e53935;
+$background-color: #f4f4f9;
+$form-bg: #ffffff;
+$border-color: #d1d5db;
+
+.categories-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: $background-color;
+  font-family: "Poppins", sans-serif;
+}
+
+.form-wrapper {
+  background: $form-bg;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  width: 98%;
+  height: 95vh;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+
+  h2 {
+    color: $primary-color;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .input-group {
+    text-align: left;
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid $border-color;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: 0.3s;
+
+      &:focus {
+        border-color: $primary-color;
+        outline: none;
+        box-shadow: 0 0 5px rgba(30, 136, 229, 0.5);
+      }
+    }
+  }
+
+  .error-message {
+    color: $error-color;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  button {
+    background: $primary-color;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: 0.3s;
+    width: 200px;
+
+    &:hover {
+      background: color.adjust($primary-color, $lightness: -10%);
+    }
+  }
+}

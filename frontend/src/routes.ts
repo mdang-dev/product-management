@@ -1,9 +1,13 @@
 import { lazy } from "react";
 
-const HomePage = lazy(() => import('./pages/HomePage'));
+const HomePage = lazy(() => import('./pages/user/HomePage'));
+const CategoriesFormPage = lazy(() => import('./pages/admin/Categories/CategoriesFormPage'))
 
-const routes = [
+export const routes = [
     {path: '/', element: HomePage}
 ]
 
-export default routes;
+export const routesAdmin = [
+    {path: 'categories/form', element: CategoriesFormPage}
+]
+
