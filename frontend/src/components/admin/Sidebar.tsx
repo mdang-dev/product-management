@@ -4,7 +4,7 @@ import { AlignJustify, Tag, Box, CornerRightUp } from "lucide-react";
 import "../../styles/Sidebar.scss";
 
 const Sidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
   const [menuState, setMenuState] = useState({
     categories: false,
     products: false,
@@ -48,7 +48,7 @@ const Sidebar = () => {
                 </li>
                 <li>
                   <CornerRightUp size={18} className="rotated-submenu" />
-                  <Link to="/admin/categories/list">Form</Link>
+                  <Link to="/admin/categories/form">Form</Link>
                 </li>
               </ul>
             </div>
@@ -66,11 +66,11 @@ const Sidebar = () => {
               >
                 <li>
                   <CornerRightUp size={18} className="rotated-submenu" />
-                  <Link to="/admin/categories/list">List</Link>
+                  <Link to="/admin/products/list">List</Link>
                 </li>
                 <li>
                   <CornerRightUp size={18} className="rotated-submenu" />
-                  <Link to="/admin/categories/list">Form</Link>
+                  <Link to="/admin/products/form">Form</Link>
                 </li>
               </ul>
             </div>

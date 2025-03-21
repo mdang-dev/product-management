@@ -1,5 +1,5 @@
 import { Suspense, lazy } from "react";
-import "./styles/global.scss";
+import "./styles/Global.scss";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LayoutRoot from "./layout/user/Layout";
 import LayoutAdmin from "./layout/admin/Layout";
@@ -7,7 +7,7 @@ import { routes } from "./routes";
 import { routesAdmin } from "./routes";
 import NotFound from "./pages/user/NotFound";
 import AuthProvider from "./provider/AuthProvider";
-import CategoriesPage from "./pages/admin/Categories/CategoriesFormPage";
+import CategoriesPage from "./pages/admin/categories/CategoriesFormPage";
 const LoginPage = lazy(() => import("./pages/user/LoginPage"));
 const SignUp = lazy(() => import("./pages/user/SignUpPage"));
 
