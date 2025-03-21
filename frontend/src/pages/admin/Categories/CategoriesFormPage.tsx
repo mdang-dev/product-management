@@ -35,7 +35,6 @@ const CategoriesPage: React.FC = () => {
         <h2>Create Category</h2>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* ID Field */}
           <div className="input-group">
             <label>ID</label>
             <input
@@ -46,7 +45,6 @@ const CategoriesPage: React.FC = () => {
             {errors.id && <p className="error-message">{errors.id.message}</p>}
           </div>
 
-          {/* Name Field */}
           <div className="input-group">
             <label>Name</label>
             <input
@@ -59,7 +57,6 @@ const CategoriesPage: React.FC = () => {
             )}
           </div>
 
-          {/* Submit Button */}
           <button type="submit">Submit</button>
         </form>
       </div>

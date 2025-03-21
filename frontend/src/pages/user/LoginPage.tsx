@@ -4,6 +4,7 @@ import "../../styles/LoginPage.scss";
 import { useAuth } from "../../provider/AuthProvider";
 
 const LoginPage: React.FC = () => {
+  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();

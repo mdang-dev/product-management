@@ -1,7 +1,6 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import { User } from "../model/user.model";
 import { api } from "../lib/api";
-import { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
 type AuthContextType = {

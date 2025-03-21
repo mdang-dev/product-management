@@ -1,11 +1,13 @@
-export type Product = {
+import { Category } from "./category.model";
+
+export type Product =  {
     id?: string;
     name?: string;
     description?: string;
-    category?: string;
-    imageUrl?:string;
-    quantity: number;
+    imageUrl?: string;
+    category?: Category;
+    quantity?: number;
     price?: number;
     createAt?: Date;
     updateAt?: Date;
-}
+  }
