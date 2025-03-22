@@ -1,5 +1,6 @@
 package com.product.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -23,9 +24,11 @@ public class User {
     String username;
 
     @Column(nullable = false)
+    @JsonIgnore
     String password;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     Set<Token> tokens;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
