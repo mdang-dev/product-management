@@ -62,11 +62,12 @@ public class AuthController {
     }
 
     @PostMapping(URI + "/register")
-    public ResponseEntity<String> register(@RequestBody User userDto) {
+    public ResponseEntity<String> register(@RequestBody UserLoginDto userDto) {
+        User user = User.builder().username(userDto.getUsername()).password(userDto.getPassword()).build();
         if (userRepository.existsByUsername(userDto.getUsername())) {
             return new ResponseEntity<>("Email is taken !", HttpStatus.BAD_REQUEST);
         }else {
-            userService.createUser(userDto);
+            userService.createUser(user);
             return new ResponseEntity<>("Register successfully !", HttpStatus.CREATED);
         }
     }

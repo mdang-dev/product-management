@@ -47,7 +47,7 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
-    private final String[] ACCESS_ENDPOINTS = {"/api/auth/**", "/users/logout "};
+    private final String[] ACCESS_ENDPOINTS = {"/api/auth/**", "/users/logout"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
