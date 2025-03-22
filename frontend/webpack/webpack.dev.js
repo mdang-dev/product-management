@@ -12,6 +12,7 @@ module.exports = {
   plugins: [
     new DefinePlugin({
       "process.env.name": JSON.stringify("MD"),
+      "process.env.url": JSON.stringify("http://localhost:8080"),
     }),
     new ReactRefreshWebpackPlugin(),
   ],

@@ -1,73 +1,74 @@
-import React, { useMemo, useState } from "react";
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-  ColumnDef,
-} from "@tanstack/react-table";
-import "../../../styles/CategoriesListPage.scss";
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import UpdateCategoryModal from "./UpdateCategoryModal";
+import { toast, ToastContainer } from "react-toastify";
+import { useCategoriesQuery, useCategoriesStore } from "../../../store/categoriesStore";
 import { Category } from "../../../model/category.model";
-
-const initialData: Category[] = [
-  { id: "1", name: "Electronics" },
-  { id: "2", name: "Clothing" },
-  { id: "3", name: "Books" },
-];
+import "../../../styles/CategoriesListPage.scss";
+import { useMemo } from "react";
 
 const CategoriesListPage = () => {
-  const [data, setData] = useState<Category[]>(initialData);
+  const {
+    selectedCategory,
+    isUpdateModalOpen,
+    isDeleteModalOpen,
+    setSelectedCategory,
+    setUpdateModalOpen,
+    setDeleteModalOpen,
+  } = useCategoriesStore();
 
-  const handleDelete = (id: string) => {
-    setData((prev) => prev.filter((category) => category.id !== id));
-  };
+  const { fetchCategories, updateCategory, removeCategory } = useCategoriesQuery();
+  const categories = fetchCategories.data || [];
+  const updateMutation = updateCategory;
+  const deleteMutation = removeCategory;
 
-  const handleUpdate = (id: string) => {
-    const newName = prompt("Enter new category name:");
-    if (newName) {
-      setData((prev) =>
-        prev.map((category) =>
-          category.id === id ? { ...category, name: newName } : category
-        )
-      );
+  const confirmDelete = async () => {
+    if (selectedCategory) {
+      try {
+        await deleteMutation.mutateAsync(selectedCategory.id);
+        toast.success("Category deleted successfully!");
+        setDeleteModalOpen(false);
+        setSelectedCategory(null);
+      } catch {
+        toast.error("Failed to delete category.");
+      }
     }
   };
 
-  const columns = useMemo<ColumnDef<Category>[]>(
-    () => [
-      {
-        accessorKey: "id",
-        header: "ID",
-      },
-      {
-        accessorKey: "name",
-        header: "Category Name",
-      },
-      {
-        id: "actions",
-        header: "Actions",
-        cell: ({ row }) => (
-          <div className="action-buttons">
-            <button
-              onClick={() => handleUpdate(row.original.id)}
-              className="update-btn"
-            >
-              Update
-            </button>
-            <button
-              onClick={() => handleDelete(row.original.id)}
-              className="delete-btn"
-            >
-              Delete
-            </button>
-          </div>
-        ),
-      },
-    ],
-    []
-  );
+  const handleUpdateCategory = async (updatedCategory: Category) => {
+    try {
+      await updateMutation.mutateAsync(updatedCategory);
+      toast.success("Category updated successfully!");
+      setUpdateModalOpen(false);
+      setSelectedCategory(null);
+    } catch {
+      toast.error("Failed to update category.");
+    }
+  };
+
+  const columns = useMemo<ColumnDef<Category>[]>(() => [
+    {
+      accessorKey: "id",
+      header: "ID",
+    },
+    {
+      accessorKey: "name",
+      header: "Category Name",
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <div className="action-buttons">
+          <button onClick={() => { setSelectedCategory(row.original); setUpdateModalOpen(true); }} className="update-btn">Update</button>
+          <button onClick={() => { setSelectedCategory(row.original); setDeleteModalOpen(true); }} className="delete-btn">Delete</button>
+        </div>
+      ),
+    },
+  ], []);
 
   const table = useReactTable({
-    data,
+    data: categories,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -75,16 +76,13 @@ const CategoriesListPage = () => {
   return (
     <div className="categories-list-container">
       <h2>Categories</h2>
-      <table className="categories-table">
+      <table className="categories-table" style={{ borderRadius: "8px", fontFamily: "Arial, sans-serif" }}>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
+                  {flexRender(header.column.columnDef.header, header.getContext())}
                 </th>
               ))}
             </tr>
@@ -102,6 +100,21 @@ const CategoriesListPage = () => {
           ))}
         </tbody>
       </table>
+      {isUpdateModalOpen && selectedCategory && (
+        <UpdateCategoryModal
+          category={selectedCategory}
+          onClose={() => { setUpdateModalOpen(false); setSelectedCategory(null); }}
+          onUpdate={handleUpdateCategory}
+        />
+      )}
+      {isDeleteModalOpen && selectedCategory && (
+        <ConfirmDeleteModal
+          categoryName={selectedCategory.name}
+          onClose={() => { setDeleteModalOpen(false); setSelectedCategory(null); }}
+          onConfirm={confirmDelete}
+        />
+      )}
+      <ToastContainer />
     </div>
   );
 };

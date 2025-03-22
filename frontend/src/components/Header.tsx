@@ -16,7 +16,7 @@ import { useAuth } from "../provider/AuthProvider";
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -52,18 +52,33 @@ const Header: React.FC = () => {
           </ul>
         </nav>
         <div className="header__auth">
-          <button
-            className="header__auth-button"
-            onClick={() => navigate("/login")}
-          >
-            <LogIn size={16} /> Login
-          </button>
-          <button
-            className="header__auth-button"
-            onClick={() => navigate("/sign-up")}
-          >
-            <UserPlus size={16} /> Sign Up
-          </button>
+          {!isAuthenticated ? (
+            <>
+              <button
+                className="header__auth-button"
+                onClick={() => navigate("/login")}
+              >
+                <LogIn size={16} /> Login
+              </button>
+              <button
+                className="header__auth-button"
+                onClick={() => navigate("/sign-up")}
+              >
+                <UserPlus size={16} /> Sign Up
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="flex">
+                <span className="header__hi-user">Hi:</span>
+                <span>@{user?.username}</span>
+
+                <button className="header__auth-button" onClick={logout}>
+                  <LogIn size={16} /> Logout
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </header>

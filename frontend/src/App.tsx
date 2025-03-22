@@ -7,41 +7,45 @@ import { routes } from "./routes";
 import { routesAdmin } from "./routes";
 import NotFound from "./pages/user/NotFound";
 import AuthProvider from "./provider/AuthProvider";
-import CategoriesPage from "./pages/admin/categories/CategoriesFormPage";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const LoginPage = lazy(() => import("./pages/user/LoginPage"));
 const SignUp = lazy(() => import("./pages/user/SignUpPage"));
 
+const queryClient = new QueryClient();
+
 const App = () => {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Routes>
-            <Route path="/" element={<LayoutRoot />}>
-              {routes.map((route, index) => (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={<route.element />}
-                />
-              ))}
-            </Route>
-            <Route path="/admin/*" element={<LayoutAdmin />}>
-              {routesAdmin.map((route, index) => (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={<route.element />}
-                />
-              ))}
-            </Route>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <BrowserRouter>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route path="/" element={<LayoutRoot />}>
+                {routes.map((route, index) => (
+                  <Route
+                    key={index}
+                    path={route.path}
+                    element={<route.element />}
+                  />
+                ))}
+              </Route>
+              <Route path="/admin/*" element={<LayoutAdmin />}>
+                {routesAdmin.map((route, index) => (
+                  <Route
+                    key={index}
+                    path={route.path}
+                    element={<route.element />}
+                  />
+                ))}
+              </Route>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/sign-up" element={<SignUp />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 };
 

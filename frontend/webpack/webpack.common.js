@@ -8,7 +8,7 @@ module.exports = {
     alias: {
       "@": path.resolve(__dirname, "src"),
     },
-    extensions: [".js", ".jsx", ".ts", ".tsx", ".scss"],
+    extensions: [".js", ".jsx", ".ts", ".tsx", ".scss", ".css"],
   },
   module: {
     rules: [
@@ -22,7 +22,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.scss$/,
+        test: /\.(css|scss)$/,
         use: ["style-loader", "css-loader", "sass-loader"],
       },
       {

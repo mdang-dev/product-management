@@ -21,7 +21,7 @@ const initialProducts: Product[] = [
     id: "101",
     name: "Smartphone",
     description: "Latest model with advanced features",
-    imageUrl: undefined,
+    imageUrl: "undefined",
     category: categories[0],
     quantity: 10,
     price: 699,

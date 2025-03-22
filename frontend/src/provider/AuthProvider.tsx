@@ -1,7 +1,14 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { User } from "../model/user.model";
 import { api } from "../lib/api";
 import Cookies from "js-cookie";
+import { redirect, useNavigate } from "react-router-dom";
 
 type AuthContextType = {
   user: User | null;
@@ -10,7 +17,7 @@ type AuthContextType = {
   isAuthenticated: boolean;
 };
 
-type LoginRespone = {
+type LoginResponse = {
   token: string;
 };
 
@@ -22,11 +29,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
+
   const login = async (
     username: string,
     password: string
   ): Promise<void | undefined> => {
-    const response = await api.post<LoginRespone>("/api/auth/login", {
+    const response = await api.post<LoginResponse>("/api/auth/login", {
       username,
       password,
     });
@@ -34,6 +42,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       throw new Error("Error fetching data from server");
     Cookies.set("token", response.data.token);
     setIsAuthenticated(true);
+    await fetchUserInfo();
   };
 
   const logout = () => {
@@ -41,6 +50,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     setIsAuthenticated(false);
     setUser(null);
   };
+
+  const fetchUserInfo = async (): Promise<void | undefined> => {
+    const response = await api.get("/api/users/my-info");
+    if (response.status !== 200)
+      throw new Error("Error fetching data from server");
+    setUser(response.data);
+  };
+
+  useEffect(() => {
+    fetchUserInfo().catch(() => setUser(null));
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, login, logout, isAuthenticated }}>
