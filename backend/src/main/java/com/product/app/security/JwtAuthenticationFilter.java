@@ -46,6 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      String token = jwtUtil.getTokenFromRequest(request);
      if(!StringUtils.hasText(token)){
          response.setStatus(HttpStatus.UNAUTHORIZED.value());
+         return;
      }
 
      try {
