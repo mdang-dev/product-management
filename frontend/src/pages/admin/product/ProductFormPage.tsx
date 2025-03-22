@@ -5,16 +5,17 @@ import * as yup from "yup";
 import "../../../styles/ProductFormPage.scss";
 import { Category } from "../../../model/category.model";
 
-export type Product = {
-  id: string;
+type ProductForm = {
+  id?: string;
   name: string;
-  description: string;
-  imageUrl?: string;
+  description?: string;
+  imageUrl: string;
+  imageFile: FileList;
   category: string;
   quantity: number;
   price: number;
-  createAt: string;
-  updateAt?: string;
+  createAt?: Date;
+  updateAt?: Date;
 };
 
 const categories: Category[] = [
@@ -24,12 +25,23 @@ const categories: Category[] = [
 ];
 
 const schema = yup.object().shape({
+  id: yup.string().optional(),
   name: yup.string().required("Product name is required"),
-  description: yup.string().required("Description is required"),
-  imageUrl: yup.string().url("Must be a valid URL").optional(),
+  description: yup.string().optional(),
+  imageFile: yup
+    .mixed<FileList>()
+    .test("fileType", "Unsupported file format", (value) =>
+      value && value.length > 0
+        ? ["image/jpeg", "image/png", "image/gif"].includes(value[0].type)
+        : false
+    )
+    .required("Images are required"),
+  imageUrl: yup.string().required("Image url is required"),
   category: yup.string().required("Category is required"),
   quantity: yup.number().positive().integer().required("Quantity is required"),
   price: yup.number().positive().required("Price is required"),
+  createAt: yup.date().optional(),
+  updateAt: yup.date().optional(),
 });
 
 const ProductForm = () => {
@@ -37,11 +49,11 @@ const ProductForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Product>({
+  } = useForm<ProductForm>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: Product) => {
+  const onSubmit = (data: ProductForm) => {
     console.log("Product Data:", data);
   };
 
@@ -56,6 +68,10 @@ const ProductForm = () => {
         <label>Description</label>
         <textarea {...register("description")} />
         <p className="error">{errors.description?.message}</p>
+
+        <label>Image File</label>
+        <input {...register("imageFile")} />
+        <p className="error">{errors.imageUrl?.message}</p>
 
         <label>Image URL</label>
         <input {...register("imageUrl")} />

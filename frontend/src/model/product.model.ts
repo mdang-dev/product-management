@@ -10,4 +10,4 @@ export type Product =  {
     price?: number;
     createAt?: Date;
     updateAt?: Date;
-  }
+}
