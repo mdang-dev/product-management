@@ -1,8 +1,16 @@
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import UpdateCategoryModal from "./UpdateCategoryModal";
 import { toast, ToastContainer } from "react-toastify";
-import { useCategoriesQuery, useCategoriesStore } from "../../../store/categoriesStore";
+import {
+  useCategoriesQuery,
+  useCategoriesStore,
+} from "../../../store/categoriesStore";
 import { Category } from "../../../model/category.model";
 import "../../../styles/CategoriesListPage.scss";
 import { useMemo } from "react";
@@ -17,7 +25,8 @@ const CategoriesListPage = () => {
     setDeleteModalOpen,
   } = useCategoriesStore();
 
-  const { fetchCategories, updateCategory, removeCategory } = useCategoriesQuery();
+  const { fetchCategories, updateCategory, removeCategory } =
+    useCategoriesQuery();
   const categories = fetchCategories.data || [];
   const updateMutation = updateCategory;
   const deleteMutation = removeCategory;
@@ -46,26 +55,45 @@ const CategoriesListPage = () => {
     }
   };
 
-  const columns = useMemo<ColumnDef<Category>[]>(() => [
-    {
-      accessorKey: "id",
-      header: "ID",
-    },
-    {
-      accessorKey: "name",
-      header: "Category Name",
-    },
-    {
-      id: "actions",
-      header: "Actions",
-      cell: ({ row }) => (
-        <div className="action-buttons">
-          <button onClick={() => { setSelectedCategory(row.original); setUpdateModalOpen(true); }} className="update-btn">Update</button>
-          <button onClick={() => { setSelectedCategory(row.original); setDeleteModalOpen(true); }} className="delete-btn">Delete</button>
-        </div>
-      ),
-    },
-  ], []);
+  const columns = useMemo<ColumnDef<Category>[]>(
+    () => [
+      {
+        accessorKey: "id",
+        header: "ID",
+      },
+      {
+        accessorKey: "name",
+        header: "Category Name",
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => (
+          <div className="action-buttons">
+            <button
+              onClick={() => {
+                setSelectedCategory(row.original);
+                setUpdateModalOpen(true);
+              }}
+              className="update-btn"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => {
+                setSelectedCategory(row.original);
+                setDeleteModalOpen(true);
+              }}
+              className="delete-btn"
+            >
+              Delete
+            </button>
+          </div>
+        ),
+      },
+    ],
+    []
+  );
 
   const table = useReactTable({
     data: categories,
@@ -76,13 +104,19 @@ const CategoriesListPage = () => {
   return (
     <div className="categories-list-container">
       <h2>Categories</h2>
-      <table className="categories-table" style={{ borderRadius: "8px", fontFamily: "Arial, sans-serif" }}>
+      <table
+        className="categories-table"
+        style={{ borderRadius: "8px", fontFamily: "Arial, sans-serif" }}
+      >
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th key={header.id}>
-                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
                 </th>
               ))}
             </tr>
@@ -103,18 +137,23 @@ const CategoriesListPage = () => {
       {isUpdateModalOpen && selectedCategory && (
         <UpdateCategoryModal
           category={selectedCategory}
-          onClose={() => { setUpdateModalOpen(false); setSelectedCategory(null); }}
+          onClose={() => {
+            setUpdateModalOpen(false);
+            setSelectedCategory(null);
+          }}
           onUpdate={handleUpdateCategory}
         />
       )}
       {isDeleteModalOpen && selectedCategory && (
         <ConfirmDeleteModal
           categoryName={selectedCategory.name}
-          onClose={() => { setDeleteModalOpen(false); setSelectedCategory(null); }}
+          onClose={() => {
+            setDeleteModalOpen(false);
+            setSelectedCategory(null);
+          }}
           onConfirm={confirmDelete}
         />
       )}
-      <ToastContainer />
     </div>
   );
 };

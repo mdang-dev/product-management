@@ -69,9 +69,9 @@ const products: Product[] = [
   {
     id: "5",
     name: "Bluetooth Speaker",
-    description: "Waterproof Bluetooth speaker with excellent sound quality.",
+    description: "http://localhost:8080/products/dummy.png",
     price: 39.99,
-    imageUrl: Product7,
+    imageUrl: "http://localhost:8080/products/dummy.png",
     quantity: 0,
     updateAt: new Date(),
   },

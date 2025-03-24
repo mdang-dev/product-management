@@ -8,7 +8,6 @@ import React, {
 import { User } from "../model/user.model";
 import { api } from "../lib/api";
 import Cookies from "js-cookie";
-import { redirect, useNavigate } from "react-router-dom";
 
 type AuthContextType = {
   user: User | null;
@@ -28,7 +27,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
 
   const login = async (
     username: string,
@@ -59,7 +57,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
-    fetchUserInfo().catch(() => setUser(null));
+    fetchUserInfo().catch(() => {
+      setUser(null);
+      Cookies.remove("token");
+    });
   }, []);
 
   return (

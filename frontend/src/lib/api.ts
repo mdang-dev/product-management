@@ -2,18 +2,15 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const api = axios.create({
-    baseURL: process.env.url,
-    headers: {
-        'Content-Type': 'application/json'
-    },
-})
+  baseURL: process.env.url,
+});
 
 api.interceptors.request.use((config) => {
-    const token = Cookies.get("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  });
-  
-export {api};
+  const token = Cookies.get("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export { api };
