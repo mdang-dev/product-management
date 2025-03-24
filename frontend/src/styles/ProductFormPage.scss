@@ -1,14 +1,18 @@
+@use "sass:color";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+
+
 .product-form-container {
     max-width: 98%;
+    height: 95vh;
     margin: 20px auto;
-    padding: 20px;
-    background: #fff;
+    padding: 20px; 
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   
     h2 {
       text-align: center;
-      color: #031cfe;
+      color: #1e88e5;
       margin-bottom: 20px;
     }
   
@@ -17,8 +21,10 @@
       flex-direction: column;
   
       label {
-        font-weight: bold;
-        margin-top: 10px;
+        display: block;
+        font-weight: 500;
+        margin-bottom: 5px;
+        color: #333;
       }
   
       input, textarea, select {
@@ -58,4 +64,3 @@
       }
     }
   }
-  

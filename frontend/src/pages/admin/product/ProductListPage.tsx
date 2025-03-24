@@ -5,82 +5,71 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-
+import { useProductsQuery } from "../../../store/productStore";
+import { toast } from "react-toastify";
 import "../../../styles/ProductListPage.scss";
-import { Category } from "../../../model/category.model";
 import { Product } from "../../../model/product.model";
-
-const categories: Category[] = [
-  { id: "1", name: "Electronics" },
-  { id: "2", name: "Clothing" },
-  { id: "3", name: "Books" },
-];
-
-const initialProducts: Product[] = [
-  {
-    id: "101",
-    name: "Smartphone",
-    description: "Latest model with advanced features",
-    imageUrl: "undefined",
-    category: categories[0],
-    quantity: 10,
-    price: 699,
-    createAt: new Date("2024-03-01"),
-  },
-  {
-    id: "102",
-    name: "T-Shirt",
-    description: "Cotton t-shirt with stylish design",
-    imageUrl: undefined,
-    category: categories[1],
-    quantity: 50,
-    price: 19.99,
-    createAt: new Date("2024-03-02"),
-  },
-  {
-    id: "103",
-    name: "Programming Book",
-    description: "Learn JavaScript from scratch",
-    imageUrl: undefined,
-    category: categories[2],
-    quantity: 30,
-    price: 39.99,
-    createAt: new Date("2024-03-03"),
-  },
-];
+import UpdateProductModal from "./UpdateProductModal";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
 const ProductTable = () => {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const { fetchProducts, updateProduct, removeProduct } = useProductsQuery();
+  const { data: products = [] } = fetchProducts;
+  const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const columns: ColumnDef<Product>[] = [
+  const handleUpdateClick = (product: Product) => {
+    setSelectedProduct(product);
+    setUpdateModalOpen(true);
+  };
+
+  const handleDeleteClick = (product: Product) => {
+    setSelectedProduct(product);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      if (selectedProduct) {
+        await removeProduct.mutateAsync(selectedProduct.id!);
+        toast.success("Product deleted successfully!");
+      }
+      setDeleteModalOpen(false);
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error("Failed to delete product.");
+    }
+  };
+
+  const handleUpdateSubmit = async (data: Product) => {
+    try {
+      if (selectedProduct) {
+        await updateProduct.mutateAsync({
+          ...selectedProduct,
+          ...data,
+        });
+        toast.success("Product updated successfully!");
+      }
+      setUpdateModalOpen(false);
+    } catch (error) {
+      console.error("Error updating product:", error);
+      toast.error("Failed to update product.");
+    }
+  };
+
+  const columns: ColumnDef<Product, any>[] = [
     { accessorKey: "name", header: "Product Name" },
     { accessorKey: "description", header: "Description" },
-    {
-      accessorKey: "category",
-      header: "Category",
-      cell: (info) =>
-        categories.find((cat) => cat.id === info.getValue())?.name || "Unknown",
-    },
     { accessorKey: "quantity", header: "Quantity" },
-    {
-      accessorKey: "price",
-      header: "Price",
-      cell: (info) => `$${info.getValue()}`,
-    },
+    { accessorKey: "price", header: "Price", cell: (info) => `$${info.getValue()}` },
     {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => (
         <div className="actions">
-          <button className="edit-btn">Edit</button>
-          <button
-            className="delete-btn"
-            onClick={() =>
-              setProducts(products.filter((p) => p.id !== row.original.id))
-            }
-          >
-            Delete
-          </button>
+          <button className="edit-btn" onClick={() => handleUpdateClick(row.original)}>Edit</button>
+          <button className="delete-btn" onClick={() => handleDeleteClick(row.original)}>Delete</button>
         </div>
       ),
     },
@@ -101,10 +90,7 @@ const ProductTable = () => {
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
+                  {flexRender(header.column.columnDef.header, header.getContext())}
                 </th>
               ))}
             </tr>
@@ -122,6 +108,19 @@ const ProductTable = () => {
           ))}
         </tbody>
       </table>
+
+      <UpdateProductModal
+        isOpen={isUpdateModalOpen}
+        onClose={() => setUpdateModalOpen(false)}
+        onSubmit={handleUpdateSubmit}
+        initialData={selectedProduct}
+      />
+
+      <ConfirmDeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 };

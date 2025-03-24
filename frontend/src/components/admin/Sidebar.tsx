@@ -1,7 +1,8 @@
 import { useCallback, useState } from "react";
-import { Link } from "react-router-dom";
-import { AlignJustify, Tag, Box, CornerRightUp } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { AlignJustify, Tag, Box, CornerRightUp, LogOut } from "lucide-react";
 import "../../styles/Sidebar.scss";
+import { useAuth } from "../../provider/AuthProvider";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
@@ -9,6 +10,8 @@ const Sidebar = () => {
     categories: false,
     products: false,
   });
+  const nagitate = useNavigate();
+  const { logout } = useAuth();
 
   const toggleMenu = useCallback((menu: "categories" | "products") => {
     setMenuState((prev) => ({
@@ -73,6 +76,18 @@ const Sidebar = () => {
                   <Link to="/admin/products/form">Form</Link>
                 </li>
               </ul>
+            </div>
+          </li>
+          <li>
+            <div
+              className="menu-item"
+              onClick={() => {
+                logout();
+                nagitate("/login");
+              }}
+            >
+              <LogOut size={20} />
+              <span className="text">Logout</span>
             </div>
           </li>
         </ul>
