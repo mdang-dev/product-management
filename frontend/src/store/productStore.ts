@@ -1,20 +1,8 @@
 import { create } from "zustand";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/api";
-import { Category } from "../model/category.model";
+import { Product } from "../model/product.model";
 
-type Product = {
-  id: string;
-  name: string;
-  description?: string;
-  imageUrl: File;
-  imageFile?: FileList;
-  category: Category;
-  quantity: number;
-  price: number;
-  createAt?: Date;
-  updateAt?: Date;
-};
 
 type ProductStore = {
   selectedProduct: Product | null;
