@@ -8,6 +8,8 @@ import React, {
 import { User } from "../model/user.model";
 import { api } from "../lib/api";
 import Cookies from "js-cookie";
+import { Role } from "../model/role.model";
+import { boolean } from "yup";
 
 type AuthContextType = {
   user: User | null;
@@ -40,11 +42,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       throw new Error("Error fetching data from server");
     Cookies.set("token", response.data.token);
     setIsAuthenticated(true);
-    await fetchUserInfo();
+    setTimeout(fetchUserInfo, 200);
   };
 
   const logout = () => {
     Cookies.remove("token");
+    localStorage.removeItem("is");
     setIsAuthenticated(false);
     setUser(null);
   };
@@ -53,6 +56,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     const response = await api.get("/api/users/my-info");
     if (response.status !== 200)
       throw new Error("Error fetching data from server");
+    localStorage.setItem(
+      "is",
+      JSON.stringify(
+        (response.data.roles as Role[]).map((role) => role.name).filter(boolean)
+      )
+    );
+    setIsAuthenticated(true);
     setUser(response.data);
   };
 
@@ -61,7 +71,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       setUser(null);
       Cookies.remove("token");
     });
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <AuthContext.Provider value={{ user, login, logout, isAuthenticated }}>

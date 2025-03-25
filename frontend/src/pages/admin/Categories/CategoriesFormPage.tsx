@@ -3,12 +3,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../../lib/api";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../../../styles/CategoriesFormPage.scss";
 
 const schema = yup.object().shape({
-  name: yup.string().min(3, "Name must be at least 3 characters").required("Name is required"),
+  name: yup
+    .string()
+    .min(3, "Name must be at least 3 characters")
+    .required("Name is required"),
 });
 
 type CategoryFormData = {
@@ -31,7 +34,12 @@ const CategoriesPage: React.FC = () => {
     },
   });
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<CategoryFormData>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CategoryFormData>({
     resolver: yupResolver(schema),
   });
 
@@ -59,7 +67,6 @@ const CategoriesPage: React.FC = () => {
           <button type="submit">Submit</button>
         </form>
       </div>
-      <ToastContainer />
     </div>
   );
 };

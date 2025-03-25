@@ -15,10 +15,17 @@ import { useAuth } from "../provider/AuthProvider";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
+
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setLogoutModalOpen(false);
   };
 
   return (
@@ -72,8 +79,10 @@ const Header: React.FC = () => {
               <div className="flex">
                 <span className="header__hi-user">Hi:</span>
                 <span>@{user?.username}</span>
-
-                <button className="header__auth-button" onClick={logout}>
+                <button
+                  className="header__auth-button"
+                  onClick={() => setLogoutModalOpen(true)}
+                >
                   <LogIn size={16} /> Logout
                 </button>
               </div>
@@ -81,6 +90,29 @@ const Header: React.FC = () => {
           )}
         </div>
       </div>
+
+      {isLogoutModalOpen && (
+        <div className="logout-modal">
+          <div className="logout-modal-content">
+            <h3>Confirm Logout</h3>
+            <p>Are you sure you want to logout?</p>
+            <div className="logout-modal-buttons">
+              <button
+                className="confirm-logout-btn"
+                onClick={handleLogout}
+              >
+                Yes, Logout
+              </button>
+              <button
+                className="cancel-logout-btn"
+                onClick={() => setLogoutModalOpen(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

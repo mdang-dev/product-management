@@ -37,7 +37,7 @@ public class ProductController {
     }
     @PostMapping
     public ResponseEntity<String> createProduct(@RequestParam("product") String product,
-                                                @RequestParam("fileImage") MultipartFile file) throws IOException {
+                                                @RequestParam("imageFile") MultipartFile file) throws IOException {
         Product productRequest = mapper.readValue(product, Product.class);
         String imageUrl = fileStorageService.storeFile(file);
         productRequest.setImageUrl(imageUrl);
@@ -47,9 +47,9 @@ public class ProductController {
 
     @PutMapping
     public ResponseEntity<String> updateProduct(@RequestParam("product") String product,
-                                                @RequestParam("fileImage") MultipartFile file) throws IOException {
+                                                @RequestParam(value = "imageFile", required = false) MultipartFile file) throws IOException {
         Product productRequest = mapper.readValue(product, Product.class);
-        if(file.getSize() > 0 && !file.isEmpty()){
+        if(file != null){
             String imageUrl = fileStorageService.storeFile(file);
             productRequest.setImageUrl(imageUrl);
         }
