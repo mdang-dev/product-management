@@ -64,6 +64,7 @@ export const useProductsQuery = () => {
       const formData = new FormData();
 
       const productJson = JSON.stringify({
+        id: data.id,
         name: data.name,
         description: data.description || "",
         category: data.category,

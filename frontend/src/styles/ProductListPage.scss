@@ -83,4 +83,15 @@
       }
     }
   }
+
+  .image-preview-cell {
+    text-align: center;
+  }
   
+  .table-image-preview {
+    max-width: 50px;
+    max-height: 50px;
+    border-radius: 5px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+  }
