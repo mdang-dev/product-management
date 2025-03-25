@@ -59,17 +59,48 @@ const ProductTable = () => {
   };
 
   const columns: ColumnDef<Product, any>[] = [
+    { accessorKey: "id", header: "Product ID" },
     { accessorKey: "name", header: "Product Name" },
     { accessorKey: "description", header: "Description" },
+    {
+      accessorKey: "imageUrl",
+      header: "Image",
+      cell: ({ row }) => (
+        <div className="image-preview-cell">
+          <img
+            src={
+              `${process.env.url}/${row.original.imageUrl}` ||
+              "/placeholder-image.png"
+            }
+            alt={row.original.name}
+            className="table-image-preview"
+          />
+        </div>
+      ),
+    },
     { accessorKey: "quantity", header: "Quantity" },
-    { accessorKey: "price", header: "Price", cell: (info) => `$${info.getValue()}` },
+    {
+      accessorKey: "price",
+      header: "Price",
+      cell: (info) => `$${info.getValue()}`,
+    },
     {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => (
         <div className="actions">
-          <button className="edit-btn" onClick={() => handleUpdateClick(row.original)}>Edit</button>
-          <button className="delete-btn" onClick={() => handleDeleteClick(row.original)}>Delete</button>
+          <button
+            className="edit-btn"
+            onClick={() => handleUpdateClick(row.original)}
+          >
+            Edit
+          </button>
+          <button
+            className="delete-btn"
+            onClick={() => handleDeleteClick(row.original)}
+          >
+            Delete
+          </button>
         </div>
       ),
     },
@@ -90,7 +121,10 @@ const ProductTable = () => {
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th key={header.id}>
-                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
                 </th>
               ))}
             </tr>

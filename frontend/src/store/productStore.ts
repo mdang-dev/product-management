@@ -1,97 +1,69 @@
 import { create } from "zustand";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/api";
-import { Product } from "../model/product.model";
 
+type Category = {
+  id: string;
+  name: string;
+};
 
-type ProductStore = {
-  selectedProduct: Product | null;
+type CategoriesStore = {
+  selectedCategory: Category | null;
   isUpdateModalOpen: boolean;
   isDeleteModalOpen: boolean;
-  setSelectedProduct: (product: Product | null) => void;
+  setSelectedCategory: (category: Category | null) => void;
   setUpdateModalOpen: (isOpen: boolean) => void;
   setDeleteModalOpen: (isOpen: boolean) => void;
 };
 
-export const useProductStore = create<ProductStore>((set) => ({
-  selectedProduct: null,
+export const useCategoriesStore = create<CategoriesStore>((set) => ({
+  selectedCategory: null,
   isUpdateModalOpen: false,
   isDeleteModalOpen: false,
-  setSelectedProduct: (product) => set({ selectedProduct: product }),
+  setSelectedCategory: (category) => set({ selectedCategory: category }),
   setUpdateModalOpen: (isOpen) => set({ isUpdateModalOpen: isOpen }),
   setDeleteModalOpen: (isOpen) => set({ isDeleteModalOpen: isOpen }),
 }));
 
-export const useProductsQuery = () => {
+export const useCategoriesQuery = () => {
   const queryClient = useQueryClient();
 
-  const fetchProducts = useQuery<Product[]>({
-    queryKey: ["products"],
+  const fetchCategories = useQuery<Category[]>({
+    queryKey: ["categories"],
     queryFn: async () => {
-      const response = await api.get("/api/products");
+      const response = await api.get("/api/categories");
       return response.data;
     },
   });
 
-  const addProduct = useMutation({
-    mutationFn: async (data: Partial<Product>) => {
-      const formData = new FormData();
-
-      const productJson = JSON.stringify({
-        name: data.name,
-        description: data.description || "",
-        category: data.category,
-        quantity: data.quantity,
-        price: data.price,
-      });
-
-      formData.append("product", productJson);
-      if (data.imageFile) {
-        formData.append("imageFile", data.imageFile[0]);
-      }
-
-      const response = await api.post("/api/products", formData);
-
+  const addCategory = useMutation({
+    mutationFn: async (data: Partial<Category>) => {
+      const response = await api.post("/api/categories", data);
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
   });
 
-  const updateProduct = useMutation({
-    mutationFn: async (data: Product) => {
-      const formData = new FormData();
-
-      const productJson = JSON.stringify({
-        name: data.name,
-        description: data.description || "",
-        category: data.category,
-        quantity: data.quantity,
-        price: data.price,
-      });
-
-      formData.append("product", productJson);
-      if (data.imageFile) {
-        formData.append("imageFile", data.imageFile[0]);
-      }
-
-      const response = await api.put(`/api/products`, formData);
+  const updateCategory = useMutation({
+    mutationFn: async (updatedCategory: Category) => {
+      const response = await api.put(`/api/categories`, updatedCategory);
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
   });
 
-  const removeProduct = useMutation({
+  const removeCategory = useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/api/products/${id}`);
+      await api.delete(`/api/categories/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
   });
 
-  return { fetchProducts, addProduct, updateProduct, removeProduct };
+  return { fetchCategories, addCategory, updateCategory, removeCategory };
 };
