@@ -1,5 +1,6 @@
 package com.product.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -23,6 +24,7 @@ public class Category {
     String name;
 
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     Set<Product> products;
 
 }
