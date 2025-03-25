@@ -18,7 +18,7 @@ const ProductCard: React.FC<Product> = ({
         <p className="product-card__description">{description}</p>
         <div className="product-card__details">
           <span className="product-card__quantity">
-            {quantity > 0 ? `Stock: ${quantity}` : "Out of Stock"}
+            {quantity! > 0 ? `Stock: ${quantity}` : "Out of Stock"}
           </span>
         </div>
         <div className="product-card__footer">

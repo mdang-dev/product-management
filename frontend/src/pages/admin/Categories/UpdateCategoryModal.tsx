@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "../../../styles/UpdateCategoryModal.scss";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 
 type UpdateCategoryModalProps = {
   category: { id: string; name: string };
@@ -7,38 +10,59 @@ type UpdateCategoryModalProps = {
   onUpdate: (updatedCategory: { id: string; name: string }) => void;
 };
 
+const schema = yup.object().shape({
+  name: yup.string().required("Category name is required"),
+});
+
 const UpdateCategoryModal: React.FC<UpdateCategoryModalProps> = ({
   category,
   onClose,
   onUpdate,
 }) => {
-  const [name, setName] = useState(category.name);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: category,
+  });
 
-  const handleSubmit = () => {
-    if (name.trim()) {
-      onUpdate({ id: category.id, name });
+  const onSubmit = () => {
+    if (category) {
+      onUpdate({ id: category.id, name: category.name });
       onClose();
     }
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="update-category-modal update-category-modal-transition">
+      <div className="update-category-modal-content">
         <h3>Update Category</h3>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter new category name"
-        />
-        <div className="modal-actions">
-          <button onClick={handleSubmit} className="save-btn">
-            Save
-          </button>
-          <button onClick={onClose} className="cancel-btn">
-            Cancel
-          </button>
-        </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <label>
+            Category Name <span className="update-category-required">*</span>
+          </label>
+          <input
+            {...register("name")}
+            className="update-category-custom-input"
+          />
+          <p className="update-category-error"></p>
+
+          <div className="update-category-modal-buttons">
+            <button type="submit" className="update-category-save-btn">
+              Save
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="update-category-cancel-btn"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

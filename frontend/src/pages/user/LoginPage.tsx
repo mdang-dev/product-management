@@ -2,27 +2,25 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/LoginPage.scss";
 import { useAuth } from "../../provider/AuthProvider";
-import { User } from "../../model/user.model";
-import { api } from "../../lib/api";
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { user } = useAuth();
   const { login } = useAuth();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     login(username, password);
-    const fetchedUser = await api
-      .get("/api/users/my-info")
-      .then((res) => res.data);
-    if ((fetchedUser as User).roles.some((role) => role.name === "ADMIN")) {
-      navigate("/admin/products/list");
-    } else {
-      navigate("/");
-    }
+    setTimeout(() => {
+      const storedRoles = JSON.parse(localStorage.getItem("is")!) || [];
+
+      if (storedRoles.includes("ADMIN")) {
+        navigate("/admin/products/list");
+      } else {
+        navigate("/");
+      }
+    }, 300);
   };
 
   return (

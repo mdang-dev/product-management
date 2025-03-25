@@ -1,83 +1,112 @@
-.modal-overlay {
+.update-category-modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  opacity: 0;
-  animation: fadeIn 0.3s forwards;
 }
 
-.modal-content {
+.update-category-modal-content {
   background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  width: 400px;
-  text-align: center;
-  transform: scale(0.9);
-  animation: scaleIn 0.3s forwards;
+  padding: 25px;
+  border-radius: 10px;
+  width: 450px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  text-align: left;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-.modal-content h3 {
+.update-category-modal-content h3 {
   margin-bottom: 20px;
-  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
 }
 
-.modal-content input {
+.update-category-modal-content form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+.update-category-custom-input,
+.update-category-custom-textarea {
   width: 100%;
   padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: border-color 0.2s;
 }
 
-.modal-actions {
+.update-category-custom-input:focus,
+.update-category-custom-textarea:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+.update-category-modal-content form .update-category-error {
+  color: #f44336;
+  font-size: 12px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+.update-category-modal-buttons {
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
 }
 
-.save-btn {
+.update-category-save-btn {
   background-color: #4caf50;
   color: white;
-  border: none;
   padding: 10px 20px;
-  border-radius: 6px;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
 }
 
-.cancel-btn {
+.update-category-save-btn:hover {
+  background-color: #45a049;
+}
+
+.update-category-cancel-btn {
   background-color: #f44336;
   color: white;
-  border: none;
   padding: 10px 20px;
-  border-radius: 6px;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
 }
 
-.save-btn:hover,
-.cancel-btn:hover {
-  opacity: 0.9;
+.update-category-cancel-btn:hover {
+  background-color: #e53935;
+}
+
+.update-category-required {
+  color: red;
+  font-weight: bold;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes scaleIn {
-  from {
     transform: scale(0.9);
   }
   to {
+    opacity: 1;
     transform: scale(1);
   }
 }
