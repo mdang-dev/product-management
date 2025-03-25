@@ -3,7 +3,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/api";
 import { Product } from "../model/product.model";
 
-
 type ProductStore = {
   selectedProduct: Product | null;
   isUpdateModalOpen: boolean;
