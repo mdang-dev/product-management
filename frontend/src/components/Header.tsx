@@ -14,11 +14,11 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/AuthProvider";
 
 const Header: React.FC = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMenuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setMenuOpen(!isMenuOpen);
   };
 
   return (
@@ -36,9 +36,9 @@ const Header: React.FC = () => {
           />
         </div>
         <button className="header__menu-toggle" onClick={toggleMenu}>
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
-        <nav className={`header__nav ${menuOpen ? "header__nav--open" : ""}`}>
+        <nav className={`header__nav ${isMenuOpen ? "header__nav--open" : ""}`}>
           <ul className="header__nav-list">
             <li className="header__nav-item">
               <Home size={16} /> Home
