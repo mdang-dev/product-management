@@ -44,10 +44,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
      String token = jwtUtil.getTokenFromRequest(request);
-     if(!StringUtils.hasText(token)){
-         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-     }
-
      try {
             boolean isTokenValid = tokenRepository.findByToken(token)
                     .map(t -> !t.getExpired() && !t.getRevoked())
@@ -61,6 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         } catch (ParseException | JOSEException e) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             throw new RuntimeException(e);
         }
 
