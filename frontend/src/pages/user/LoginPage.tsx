@@ -33,7 +33,7 @@ const LoginPage: React.FC = () => {
   const handleLogin: SubmitHandler<FormData> = async (data) => {
     setIsLoading(true);
     try {
-      login(data.username, data.password);
+      await login(data.username, data.password);
       setTimeout(() => {
         const storedRoles = JSON.parse(localStorage.getItem("is")!) || [];
         if (storedRoles.includes("ADMIN")) {
@@ -41,10 +41,9 @@ const LoginPage: React.FC = () => {
         } else {
           navigate("/");
         }
+        toast.success("Login successful!");
       }, 300);
-      toast.success("Login successful!");
     } catch (error) {
-      console.error("Error logging in:", error);
       toast.error("Invalid username or password.");
     } finally {
       setIsLoading(false);

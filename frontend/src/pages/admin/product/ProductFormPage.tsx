@@ -6,8 +6,6 @@ import { toast } from "react-toastify";
 import "../../../styles/ProductFormPage.scss";
 import { useCategoriesQuery } from "../../../store/categoriesStore";
 import { useProductsQuery } from "../../../store/productStore";
-import { Category } from "../../../model/category.model";
-
 type ProductForm = {
   id?: string;
   name: string;

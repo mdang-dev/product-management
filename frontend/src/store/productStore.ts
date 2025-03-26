@@ -22,6 +22,7 @@ export const useProductStore = create<ProductStore>((set) => ({
 }));
 
 export const useProductsQuery = () => {
+  
   const queryClient = useQueryClient();
 
   const fetchProducts = useQuery<Product[]>({

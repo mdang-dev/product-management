@@ -28,8 +28,6 @@ const CategoriesListPage = () => {
   const { fetchCategories, updateCategory, removeCategory } =
     useCategoriesQuery();
   const categories = fetchCategories.data || [];
-  const updateMutation = updateCategory;
-  const deleteMutation = removeCategory;
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -44,7 +42,7 @@ const CategoriesListPage = () => {
   const confirmDelete = async () => {
     if (selectedCategory) {
       try {
-        await deleteMutation.mutateAsync(selectedCategory.id);
+        await removeCategory.mutateAsync(selectedCategory.id);
         toast.success("Category deleted successfully!");
         setDeleteModalOpen(false);
         setSelectedCategory(null);
@@ -56,7 +54,7 @@ const CategoriesListPage = () => {
 
   const handleUpdateCategory = async (updatedCategory: Category) => {
     try {
-      await updateMutation.mutateAsync(updatedCategory);
+      await updateCategory.mutateAsync(updatedCategory);
       toast.success("Category updated successfully!");
       setUpdateModalOpen(false);
       setSelectedCategory(null);
@@ -106,7 +104,7 @@ const CategoriesListPage = () => {
   );
 
   const table = useReactTable({
-    data: filteredCategories, 
+    data: filteredCategories,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
