@@ -5,7 +5,7 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-import { useProductsQuery } from "../../../store/productStore";
+import { useProductsQuery, useProductStore } from "../../../store/productStore";
 import { toast } from "react-toastify";
 import "../../../styles/ProductListPage.scss";
 import { Product } from "../../../model/product.model";
@@ -14,44 +14,56 @@ import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
 const ProductTable = () => {
   const { fetchProducts, updateProduct, removeProduct } = useProductsQuery();
-  const { data: products = [] } = fetchProducts;
-  const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const products = fetchProducts.data || [];
+  const {
+    setSelectedProduct,
+    setUpdateModalOpen,
+    setDeleteModalOpen,
+    selectedProduct,
+    isUpdateModalOpen,
+    isDeleteModalOpen,
+  } = useProductStore();
+
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredProducts = useMemo(
     () =>
       products.filter((product) =>
-        product.name.toLowerCase().includes((searchTerm || "").toLowerCase())
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
       ),
     [products, searchTerm]
   );
 
-  const handleUpdateClick = useCallback((product: Product) => {
-    setSelectedProduct(product);
-    setUpdateModalOpen(true);
-  }, []);
+  const handleUpdateClick = useCallback(
+    (product: Product) => {
+      setSelectedProduct(product);
+      setUpdateModalOpen(true);
+    },
+    []
+  );
 
-  const handleDeleteClick = useCallback((product: Product) => {
-    setSelectedProduct(product);
-    setDeleteModalOpen(true);
-  }, []);
+  const handleDeleteClick = useCallback(
+    (product: Product) => {
+      setSelectedProduct(product);
+      setDeleteModalOpen(true);
+    },
+    []
+  );
 
-  const handleCloseUpdateModal = useCallback(() => {
+  const handleCloseUpdateModal = () => {
     setUpdateModalOpen(false);
-    setSelectedProduct(null); // Reset selected product only when modal closes
-  }, []);
+    setSelectedProduct(null);
+  };
 
-  const handleCloseDeleteModal = useCallback(() => {
+  const handleCloseDeleteModal = () => {
     setDeleteModalOpen(false);
-    setSelectedProduct(null); // Reset selected product only when modal closes
-  }, []);
+    setSelectedProduct(null);
+  };
 
   const confirmDelete = async () => {
     try {
       if (selectedProduct) {
-        await removeProduct.mutateAsync(selectedProduct.id!);
+        await removeProduct.mutateAsync(selectedProduct.id);
         toast.success("Product deleted successfully!");
       }
       handleCloseDeleteModal();
@@ -77,7 +89,7 @@ const ProductTable = () => {
     }
   };
 
-  const columns: ColumnDef<Product, any>[] = useMemo(
+  const columns= useMemo<ColumnDef<Product>[]>(
     () => [
       { accessorKey: "id", header: "Product ID" },
       { accessorKey: "name", header: "Product Name" },
@@ -125,11 +137,11 @@ const ProductTable = () => {
         ),
       },
     ],
-    [handleUpdateClick, handleDeleteClick]
+    []
   );
 
   const table = useReactTable({
-    data: filteredProducts, // Use filtered products
+    data: filteredProducts,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
