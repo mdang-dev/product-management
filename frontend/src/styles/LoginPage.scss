@@ -101,4 +101,10 @@
       }
     }
   }
+
+  &__error {
+    color: red; // Set error message color to red
+    font-size: 0.875rem; // Slightly smaller font size
+    margin-top: 0.25rem; // Add spacing above the error message
+  }
 }

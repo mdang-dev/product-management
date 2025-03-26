@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -49,7 +50,10 @@ public class ProductController {
     public ResponseEntity<String> updateProduct(@RequestParam("product") String product,
                                                 @RequestParam(value = "imageFile", required = false) MultipartFile file) throws IOException {
         Product productRequest = mapper.readValue(product, Product.class);
+        productRequest.setUpdateAt(LocalDateTime.now());
+        productRequest.setImageUrl(productService.findProduct(productRequest.getId()).getImageUrl());
         if(file != null){
+            productRequest.setImageUrl(productService.findProduct(productRequest.getId()).getImageUrl());
             String imageUrl = fileStorageService.storeFile(file);
             productRequest.setImageUrl(imageUrl);
         }

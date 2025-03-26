@@ -10,6 +10,10 @@ type UpdateCategoryModalProps = {
   onUpdate: (updatedCategory: { id: string; name: string }) => void;
 };
 
+type FormInput = {
+  name: string;
+}
+
 const schema = yup.object().shape({
   name: yup.string().required("Category name is required"),
 });
@@ -22,16 +26,15 @@ const UpdateCategoryModal: React.FC<UpdateCategoryModalProps> = ({
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormInput>({
     resolver: yupResolver(schema),
     defaultValues: category,
   });
 
-  const onSubmit = () => {
+  const onSubmit = (data: FormInput) => {
     if (category) {
-      onUpdate({ id: category.id, name: category.name });
+      onUpdate({ id: category.id, name: data.name });
       onClose();
     }
   };

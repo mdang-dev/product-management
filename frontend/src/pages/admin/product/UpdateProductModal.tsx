@@ -71,7 +71,7 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      reset(initialData);
+      reset({ ...initialData });
       setImagePreview(initialData?.imageUrl || null);
     }
   }, [isOpen, initialData, reset]);
@@ -151,7 +151,14 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
 
           {imagePreview && (
             <div className="update-image-preview">
-              <img src={`${process.env.url}/${imagePreview}`} alt="Preview" />
+              <img
+                src={
+                  imagePreview.startsWith("data:")
+                    ? imagePreview
+                    : `${process.env.url}/${imagePreview}`
+                }
+                alt="Preview"
+              />
             </div>
           )}
 
