@@ -10,11 +10,7 @@ const Layout: React.FC = () => {
 
   useEffect(() => {
     const storedRoles = JSON.parse(localStorage.getItem("is")!) || [];
-    if (storedRoles.includes("ADMIN")) {
-      navigate("/admin/products/list");
-    } else {
-      navigate("/");
-    }
+    if (!storedRoles.includes("ADMIN")) navigate("/");
   }, []);
 
   return (

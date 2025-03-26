@@ -2,15 +2,18 @@ import { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AlignJustify, Tag, Box, CornerRightUp, LogOut } from "lucide-react";
 import "../../styles/Sidebar.scss";
+
 import { useAuth } from "../../provider/AuthProvider";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
+
   const [menuState, setMenuState] = useState({
     categories: false,
     products: false,
   });
-  const nagitate = useNavigate();
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false); // State for logout modal
+  const navigate = useNavigate();
   const { logout } = useAuth();
 
   const toggleMenu = useCallback((menu: "categories" | "products") => {
@@ -19,6 +22,11 @@ const Sidebar = () => {
       [menu]: !prev[menu],
     }));
   }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
@@ -81,10 +89,7 @@ const Sidebar = () => {
           <li>
             <div
               className="menu-item"
-              onClick={() => {
-                logout();
-                nagitate("/login");
-              }}
+              onClick={() => setLogoutModalOpen(true)} // Open logout modal
             >
               <LogOut size={20} />
               <span className="text">Logout</span>
@@ -92,6 +97,26 @@ const Sidebar = () => {
           </li>
         </ul>
       </nav>
+
+      {isLogoutModalOpen && (
+        <div className="logout-modal">
+          <div className="logout-modal-content">
+            <h3 style={{ color: "black" }}>Confirm Logout</h3>
+            <p>Are you sure you want to logout?</p>
+            <div className="logout-modal-buttons">
+              <button className="confirm-logout-btn" onClick={handleLogout}>
+                Yes, Logout
+              </button>
+              <button
+                className="cancel-logout-btn"
+                onClick={() => setLogoutModalOpen(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

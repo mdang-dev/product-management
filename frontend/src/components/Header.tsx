@@ -34,7 +34,11 @@ const Header: React.FC = () => {
         <div className="header__logo">
           <h3>Product Management</h3>
         </div>
-        <div className="header__search">
+        <div
+          className={`header__search ${
+            isMenuOpen ? "header__search--visible" : ""
+          }`}
+        >
           <Search size={16} />
           <input
             type="text"
@@ -58,7 +62,11 @@ const Header: React.FC = () => {
             </li>
           </ul>
         </nav>
-        <div className="header__auth">
+        <div
+          className={`header__auth ${
+            isMenuOpen ? "header__auth--visible" : ""
+          }`}
+        >
           {!isAuthenticated ? (
             <>
               <button
@@ -97,10 +105,7 @@ const Header: React.FC = () => {
             <h3>Confirm Logout</h3>
             <p>Are you sure you want to logout?</p>
             <div className="logout-modal-buttons">
-              <button
-                className="confirm-logout-btn"
-                onClick={handleLogout}
-              >
+              <button className="confirm-logout-btn" onClick={handleLogout}>
                 Yes, Logout
               </button>
               <button

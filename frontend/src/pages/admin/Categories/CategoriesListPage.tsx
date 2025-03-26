@@ -1,3 +1,4 @@
+import React, { useMemo, useState } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -13,7 +14,6 @@ import {
 } from "../../../store/categoriesStore";
 import { Category } from "../../../model/category.model";
 import "../../../styles/CategoriesListPage.scss";
-import { useMemo } from "react";
 
 const CategoriesListPage = () => {
   const {
@@ -30,6 +30,16 @@ const CategoriesListPage = () => {
   const categories = fetchCategories.data || [];
   const updateMutation = updateCategory;
   const deleteMutation = removeCategory;
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredCategories = useMemo(
+    () =>
+      categories.filter((category) =>
+        category.name.toLowerCase().includes((searchTerm || "").toLowerCase())
+      ),
+    [categories, searchTerm]
+  );
 
   const confirmDelete = async () => {
     if (selectedCategory) {
@@ -96,7 +106,7 @@ const CategoriesListPage = () => {
   );
 
   const table = useReactTable({
-    data: categories,
+    data: filteredCategories, 
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -104,6 +114,19 @@ const CategoriesListPage = () => {
   return (
     <div className="categories-list-container">
       <h2>Categories</h2>
+      <div className="search-bar">
+        <label htmlFor="search-input" className="search-label">
+          Search:
+        </label>
+        <input
+          id="search-input"
+          type="text"
+          placeholder="Search categories..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
+      </div>
       <table
         className="categories-table"
         style={{ borderRadius: "8px", fontFamily: "Arial, sans-serif" }}

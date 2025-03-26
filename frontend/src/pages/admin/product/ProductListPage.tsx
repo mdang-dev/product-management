@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -18,16 +18,35 @@ const ProductTable = () => {
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const handleUpdateClick = (product: Product) => {
+  const filteredProducts = useMemo(
+    () =>
+      products.filter((product) =>
+        product.name.toLowerCase().includes((searchTerm || "").toLowerCase())
+      ),
+    [products, searchTerm]
+  );
+
+  const handleUpdateClick = useCallback((product: Product) => {
     setSelectedProduct(product);
     setUpdateModalOpen(true);
-  };
+  }, []);
 
-  const handleDeleteClick = (product: Product) => {
+  const handleDeleteClick = useCallback((product: Product) => {
     setSelectedProduct(product);
     setDeleteModalOpen(true);
-  };
+  }, []);
+
+  const handleCloseUpdateModal = useCallback(() => {
+    setUpdateModalOpen(false);
+    setSelectedProduct(null); // Reset selected product only when modal closes
+  }, []);
+
+  const handleCloseDeleteModal = useCallback(() => {
+    setDeleteModalOpen(false);
+    setSelectedProduct(null); // Reset selected product only when modal closes
+  }, []);
 
   const confirmDelete = async () => {
     try {
@@ -35,7 +54,7 @@ const ProductTable = () => {
         await removeProduct.mutateAsync(selectedProduct.id!);
         toast.success("Product deleted successfully!");
       }
-      setDeleteModalOpen(false);
+      handleCloseDeleteModal();
     } catch (error) {
       console.error("Error deleting product:", error);
       toast.error("Failed to delete product.");
@@ -51,63 +70,66 @@ const ProductTable = () => {
         });
         toast.success("Product updated successfully!");
       }
-      setUpdateModalOpen(false);
+      handleCloseUpdateModal();
     } catch (error) {
       console.error("Error updating product:", error);
       toast.error("Failed to update product.");
     }
   };
 
-  const columns: ColumnDef<Product, any>[] = [
-    { accessorKey: "id", header: "Product ID" },
-    { accessorKey: "name", header: "Product Name" },
-    { accessorKey: "description", header: "Description" },
-    {
-      accessorKey: "imageUrl",
-      header: "Image",
-      cell: ({ row }) => (
-        <div className="image-preview-cell">
-          <img
-            src={
-              `${process.env.url}/${row.original.imageUrl}` ||
-              "/placeholder-image.png"
-            }
-            alt={row.original.name}
-            className="table-image-preview"
-          />
-        </div>
-      ),
-    },
-    { accessorKey: "quantity", header: "Quantity" },
-    {
-      accessorKey: "price",
-      header: "Price",
-      cell: (info) => `$${info.getValue()}`,
-    },
-    {
-      id: "actions",
-      header: "Actions",
-      cell: ({ row }) => (
-        <div className="actions">
-          <button
-            className="edit-btn"
-            onClick={() => handleUpdateClick(row.original)}
-          >
-            Edit
-          </button>
-          <button
-            className="delete-btn"
-            onClick={() => handleDeleteClick(row.original)}
-          >
-            Delete
-          </button>
-        </div>
-      ),
-    },
-  ];
+  const columns: ColumnDef<Product, any>[] = useMemo(
+    () => [
+      { accessorKey: "id", header: "Product ID" },
+      { accessorKey: "name", header: "Product Name" },
+      { accessorKey: "description", header: "Description" },
+      {
+        accessorKey: "imageUrl",
+        header: "Image",
+        cell: ({ row }) => (
+          <div className="image-preview-cell">
+            <img
+              src={
+                `${process.env.url}/${row.original.imageUrl}` ||
+                "/placeholder-image.png"
+              }
+              alt={row.original.name}
+              className="table-image-preview"
+            />
+          </div>
+        ),
+      },
+      { accessorKey: "quantity", header: "Quantity" },
+      {
+        accessorKey: "price",
+        header: "Price",
+        cell: (info) => `$${info.getValue()}`,
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => (
+          <div className="actions">
+            <button
+              className="edit-btn"
+              onClick={() => handleUpdateClick(row.original)}
+            >
+              Edit
+            </button>
+            <button
+              className="delete-btn"
+              onClick={() => handleDeleteClick(row.original)}
+            >
+              Delete
+            </button>
+          </div>
+        ),
+      },
+    ],
+    [handleUpdateClick, handleDeleteClick]
+  );
 
   const table = useReactTable({
-    data: products,
+    data: filteredProducts, // Use filtered products
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -115,6 +137,19 @@ const ProductTable = () => {
   return (
     <div className="product-table-container">
       <h2>Product List</h2>
+      <div className="search-bar">
+        <label htmlFor="search-input" className="search-label">
+          Search:
+        </label>
+        <input
+          id="search-input"
+          type="text"
+          placeholder="Search products..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
+      </div>
       <table className="product-table">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -145,14 +180,14 @@ const ProductTable = () => {
 
       <UpdateProductModal
         isOpen={isUpdateModalOpen}
-        onClose={() => setUpdateModalOpen(false)}
+        onClose={handleCloseUpdateModal}
         onSubmit={handleUpdateSubmit}
         initialData={selectedProduct}
       />
 
       <ConfirmDeleteModal
         isOpen={isDeleteModalOpen}
-        onClose={() => setDeleteModalOpen(false)}
+        onClose={handleCloseDeleteModal}
         onConfirm={confirmDelete}
       />
     </div>
