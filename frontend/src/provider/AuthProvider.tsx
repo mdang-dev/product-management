@@ -42,7 +42,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       throw new Error("Error fetching data from server");
     Cookies.set("token", response.data.token);
     setIsAuthenticated(true);
-    setTimeout(fetchUserInfo, 200);
+    setTimeout(fetchUserInfo, 300);
   };
 
   const logout = () => {

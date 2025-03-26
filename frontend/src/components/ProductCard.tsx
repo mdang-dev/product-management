@@ -12,7 +12,11 @@ const ProductCard: React.FC<Product> = ({
 }) => {
   return (
     <div className="product-card">
-      <img src={imageUrl} alt={name} className="product-card__image" />
+      <img
+        src={`${process.env.url}/${imageUrl}`}
+        alt={name}
+        className="product-card__image"
+      />
       <div className="product-card__content">
         <h3 className="product-card__title">{name}</h3>
         <p className="product-card__description">{description}</p>

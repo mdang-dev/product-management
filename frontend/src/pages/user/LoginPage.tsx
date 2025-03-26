@@ -33,13 +33,15 @@ const LoginPage: React.FC = () => {
   const handleLogin: SubmitHandler<FormData> = async (data) => {
     setIsLoading(true);
     try {
-      await login(data.username, data.password);
-      const storedRoles = JSON.parse(localStorage.getItem("is")!) || [];
-      if (storedRoles.includes("ADMIN")) {
-        navigate("/admin/products/list");
-      } else {
-        navigate("/");
-      }
+      login(data.username, data.password);
+      setTimeout(() => {
+        const storedRoles = JSON.parse(localStorage.getItem("is")!) || [];
+        if (storedRoles.includes("ADMIN")) {
+          navigate("/admin/products/list");
+        } else {
+          navigate("/");
+        }
+      }, 300);
       toast.success("Login successful!");
     } catch (error) {
       console.error("Error logging in:", error);
@@ -51,10 +53,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="login-page">
-      <form
-        className="login-page__form"
-        onSubmit={handleSubmit(handleLogin)}
-      >
+      <form className="login-page__form" onSubmit={handleSubmit(handleLogin)}>
         <h2 className="login-page__title">Login</h2>
         <div className="login-page__field">
           <label htmlFor="username" className="login-page__label">

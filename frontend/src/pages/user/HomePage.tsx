@@ -10,83 +10,15 @@ import Product5 from "../../assets/images/product5.png";
 import Product6 from "../../assets/images/product6.png";
 import Product7 from "../../assets/images/product7.png";
 import Product8 from "../../assets/images/product8.png";
-
-const products: Product[] = [
-  {
-    id: "1",
-    name: "Wireless Headphones",
-    description: "High-quality wireless headphones with noise cancellation.",
-    price: 99.99,
-    imageUrl: Product4,
-    quantity: 10,
-    updateAt: new Date(),
-  },
-  {
-    id: "2",
-    name: "Smartphone Stand",
-    description: "Adjustable smartphone stand for hands-free use.",
-    price: 19.99,
-    imageUrl: Product1,
-    quantity: 5,
-    updateAt: new Date(),
-  },
-  {
-    id: "3",
-    name: "Gaming Mouse",
-    description: "Ergonomic gaming mouse with customizable buttons.",
-    price: 49.99,
-    imageUrl: Product2,
-    quantity: 8,
-    updateAt: new Date(),
-  },
-  {
-    id: "4",
-    name: "Portable Charger",
-    description: "Compact portable charger with fast charging support.",
-    price: 29.99,
-    imageUrl: Product3,
-    quantity: 15,
-    updateAt: new Date(),
-  },
-  {
-    id: "5",
-    name: "Bluetooth Speaker",
-    description: "Waterproof Bluetooth speaker with excellent sound quality.",
-    price: 39.99,
-    imageUrl: Product5,
-    quantity: 0,
-    updateAt: new Date(),
-  },
-  {
-    id: "6",
-    name: "Fitness Tracker",
-    description: "Track your fitness goals with this stylish fitness tracker.",
-    price: 59.99,
-    imageUrl: Product6,
-    quantity: 20,
-    updateAt: new Date(),
-  },
-  {
-    id: "5",
-    name: "Bluetooth Speaker",
-    description: "http://localhost:8080/products/dummy.png",
-    price: 39.99,
-    imageUrl: "http://localhost:8080/products/dummy.png",
-    quantity: 0,
-    updateAt: new Date(),
-  },
-  {
-    id: "6",
-    name: "Fitness Tracker",
-    description: "Track your fitness goals with this stylish fitness tracker.",
-    price: 59.99,
-    imageUrl: Product8,
-    quantity: 20,
-    updateAt: new Date(),
-  },
-];
+import { useProductsQuery } from "../../store/productStore";
+import { data } from "react-router-dom";
 
 const HomePage: React.FC = () => {
+  const { fetchProducts } = useProductsQuery();
+
+  const { data: products = [] } = fetchProducts;
+  console.log(data);
+
   return (
     <div className="home-page">
       <h1 className="home-page__title">Our Products</h1>
