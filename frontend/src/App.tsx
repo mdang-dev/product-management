@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 import "./styles/Global.scss";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, RouterProvider } from "react-router-dom";
 import LayoutRoot from "./layout/user/Layout";
 import LayoutAdmin from "./layout/admin/Layout";
 import { routes } from "./routes";
@@ -19,29 +19,7 @@ const App = () => {
       <AuthProvider>
         <BrowserRouter>
           <Suspense fallback={<div>Loading...</div>}>
-            <Routes>
-              <Route path="/" element={<LayoutRoot />}>
-                {routes.map((route, index) => (
-                  <Route
-                    key={index}
-                    path={route.path}
-                    element={<route.element />}
-                  />
-                ))}
-              </Route>
-              <Route path="/admin/*" element={<LayoutAdmin />}>
-                {routesAdmin.map((route, index) => (
-                  <Route
-                    key={index}
-                    path={route.path}
-                    element={<route.element />}
-                  />
-                ))}
-              </Route>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/sign-up" element={<SignUp />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <RouterProvider router={routes} />
           </Suspense>
         </BrowserRouter>
       </AuthProvider>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/RegisterPage.scss";
 import { toast, ToastContainer } from "react-toastify";
-import { api } from "../../lib/api";
+import { api } from "../../lib/queryClient";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";

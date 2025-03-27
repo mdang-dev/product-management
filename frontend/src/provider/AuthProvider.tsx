@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { User } from "../model/user.model";
-import { api } from "../lib/api";
+import { api } from "../lib/queryClient";
 import Cookies from "js-cookie";
 import { Role } from "../model/role.model";
 import { boolean } from "yup";
