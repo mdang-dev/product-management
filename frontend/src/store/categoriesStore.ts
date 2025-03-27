@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import ApiService  from "../api/apiService";
-
+import ApiSer from "../api/index"
 type Category = {
   id: string;
   name: string;
@@ -48,7 +47,7 @@ export const useCategoriesQuery = () => {
 
   const updateCategory = useMutation({
     mutationFn: async (updatedCategory: Category) => {
-      const response = await api.put(`/api/categories`, updatedCategory);
+      const response = await .put(`/api/categories`, updatedCategory);
       return response.data;
     },
     onSuccess: () => {

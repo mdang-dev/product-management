@@ -1,21 +1,21 @@
 import { AxiosPromise } from "axios"
-import ApiService from "./apiService"
+import {httpClient} from "./index"
 import { Product } from "../model/product.model"
 
 const API_URL = "/api/products"
 
-export const getProducts = async (): Promise<AxiosPromise<Product[]>> => {
-    return ApiService.get(API_URL);
+export const fetchProducts = async (): Promise<AxiosPromise<Product[]>> => {
+    return httpClient.get(API_URL);
 }
 
 export const createProduct = async (data: Product) => {
-   return ApiService.post(API_URL, data); 
+   return httpClient.post(API_URL, data); 
 }
 
 export const updateProduct  = async (data: Product) => {
-    return ApiService.put(API_URL, data);
+    return httpClient.put(API_URL, data);
 }
 
 export const deleteProduct = async (id: string) => {
-    return ApiService.delete(`${API_URL}/${id}`);
+    return httpClient.delete(`${API_URL}/${id}`);
 }
