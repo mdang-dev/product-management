@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "../lib/api";
-import { Product } from "../model/product.model";
+import { api } from "../lib/queryClient";
+import { Product } from "../models/product.model";
 
 type ProductStore = {
   selectedProduct: Product | null;

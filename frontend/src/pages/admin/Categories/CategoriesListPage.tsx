@@ -12,7 +12,7 @@ import {
   useCategoriesQuery,
   useCategoriesStore,
 } from "../../../store/categoriesStore";
-import { Category } from "../../../model/category.model";
+import { Category } from "../../../models/category.model";
 import "../../../styles/CategoriesListPage.scss";
 
 const CategoriesListPage = () => {

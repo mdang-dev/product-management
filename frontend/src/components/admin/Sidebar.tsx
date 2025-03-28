@@ -7,12 +7,11 @@ import { useAuth } from "../../provider/AuthProvider";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
-
   const [menuState, setMenuState] = useState({
     categories: false,
     products: false,
   });
-  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false); // State for logout modal
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
   const { logout } = useAuth();
 

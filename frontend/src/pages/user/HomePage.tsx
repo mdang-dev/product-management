@@ -1,7 +1,7 @@
 import React from "react";
 import ProductCard from "../../components/ProductCard";
 import "../../styles/HomePage.scss";
-import { Product } from "../../model/product.model";
+import { Product } from "../../models/product.model";
 import Product1 from "../../assets/images/product1.png";
 import Product2 from "../../assets/images/product2.png";
 import Product3 from "../../assets/images/product3.png";

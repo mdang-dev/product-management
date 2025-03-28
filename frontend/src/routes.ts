@@ -1,4 +1,5 @@
-import { lazy } from "react";
+import React, { lazy } from "react";
+import { createBrowserRouter } from "react-router-dom";
 
 const HomePage = lazy(() => import('./pages/user/HomePage'));
 const CategoriesFormPage = lazy(() => import('./pages/admin/Categories/CategoriesFormPage'))
@@ -6,9 +7,13 @@ const CategoriesListPage = lazy(() => import('./pages/admin/Categories/Categorie
 const ProductFormPage = lazy(() => import('./pages/admin/product/ProductFormPage'))
 const ProductListPage = lazy(() => import('./pages/admin/product/ProductListPage'))
 
-export const routes = [
-    {path: '/', element: HomePage}
-]
+export const routes = createBrowserRouter([
+{
+    path: '/',
+    element: React.createElement(HomePage),
+}
+]);
+
 
 export const routesAdmin = [
     {path: 'categories/form', element: CategoriesFormPage},
