@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { Category } from "../model/category.model";
+import { Category } from "../models/category.model";
 import {httpClient} from "./index"
 
 const API_URL = "/api/categories";

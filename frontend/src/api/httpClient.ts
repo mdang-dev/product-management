@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import tokenService from "../service/tokenService";
+import * as tokenStore from "../auth/token.store"
 
 
 class HttpClient {
@@ -30,9 +30,9 @@ class HttpClient {
 
     private async handleRequest(config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> {
 
-       let token = tokenService.getToken();
+       let token = tokenStore.getToken();
 
-       if(!token || tokenService.isSessionExpired(this.SESSION_TIMEOUT)){
+       if(!token || tokenStore.isSessionExpired(this.SESSION_TIMEOUT)){
           try {
             token = await this.refreshToken();
           } catch (error) {
@@ -78,7 +78,7 @@ class HttpClient {
             const response = await this.get<{ token: string }>("/users/refresh");
             const newToken = response.data.token;
 
-            tokenService.setToken(newToken);
+            tokenStore.setToken(newToken);
             this.api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
 
             this.refreshSubscribers.forEach((callback) => callback(newToken));
@@ -94,7 +94,7 @@ class HttpClient {
     }
 
     private forceLogout(): void {
-        tokenService.clearToken();
+        tokenStore.clearToken();
     }
 
     private logError(error: AxiosError): void {

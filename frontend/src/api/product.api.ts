@@ -1,6 +1,6 @@
 import { AxiosPromise } from "axios"
 import {httpClient} from "./index"
-import { Product } from "../model/product.model"
+import { Product } from "../models/product.model"
 
 const API_URL = "/api/products"
 

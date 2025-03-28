@@ -5,10 +5,10 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { User } from "../model/user.model";
+import { User } from "../models/user.model";
 import { api } from "../lib/queryClient";
 import Cookies from "js-cookie";
-import { Role } from "../model/role.model";
+import { Role } from "../models/role.model";
 import { boolean } from "yup";
 
 type AuthContextType = {

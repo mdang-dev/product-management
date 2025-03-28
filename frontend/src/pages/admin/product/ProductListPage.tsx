@@ -8,7 +8,7 @@ import {
 import { useProductsQuery, useProductStore } from "../../../store/productStore";
 import { toast } from "react-toastify";
 import "../../../styles/ProductListPage.scss";
-import { Product } from "../../../model/product.model";
+import { Product } from "../../../models/product.model";
 import UpdateProductModal from "./UpdateProductModal";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
@@ -34,21 +34,15 @@ const ProductTable = () => {
     [products, searchTerm]
   );
 
-  const handleUpdateClick = useCallback(
-    (product: Product) => {
-      setSelectedProduct(product);
-      setUpdateModalOpen(true);
-    },
-    []
-  );
+  const handleUpdateClick = useCallback((product: Product) => {
+    setSelectedProduct(product);
+    setUpdateModalOpen(true);
+  }, []);
 
-  const handleDeleteClick = useCallback(
-    (product: Product) => {
-      setSelectedProduct(product);
-      setDeleteModalOpen(true);
-    },
-    []
-  );
+  const handleDeleteClick = useCallback((product: Product) => {
+    setSelectedProduct(product);
+    setDeleteModalOpen(true);
+  }, []);
 
   const handleCloseUpdateModal = () => {
     setUpdateModalOpen(false);
@@ -89,7 +83,7 @@ const ProductTable = () => {
     }
   };
 
-  const columns= useMemo<ColumnDef<Product>[]>(
+  const columns = useMemo<ColumnDef<Product>[]>(
     () => [
       { accessorKey: "id", header: "Product ID" },
       { accessorKey: "name", header: "Product Name" },

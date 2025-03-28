@@ -8,10 +8,11 @@ import { routesAdmin } from "./routes";
 import NotFound from "./pages/user/NotFound";
 import AuthProvider from "./provider/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./react-query/client";
+
 const LoginPage = lazy(() => import("./pages/user/LoginPage"));
 const SignUp = lazy(() => import("./pages/user/SignUpPage"));
 
-const queryClient = new QueryClient();
 
 const App = () => {
   return (
