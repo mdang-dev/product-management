@@ -11,21 +11,15 @@ import {
   X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../provider/AuthProvider";
+import { useUser } from "../auth/useUser";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout } = useAuth();
-
+  const { user } = useUser();
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
-  };
-
-  const handleLogout = () => {
-    logout();
-    setLogoutModalOpen(false);
   };
 
   return (
@@ -67,17 +61,17 @@ const Header: React.FC = () => {
             isMenuOpen ? "header__auth--visible" : ""
           }`}
         >
-          {!isAuthenticated ? (
+          {!user ? (
             <>
               <button
                 className="header__auth-button"
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/auth/sign-in")}
               >
                 <LogIn size={16} /> Login
               </button>
               <button
                 className="header__auth-button"
-                onClick={() => navigate("/sign-up")}
+                onClick={() => navigate("/auth/sign-up")}
               >
                 <UserPlus size={16} /> Sign Up
               </button>
@@ -105,7 +99,7 @@ const Header: React.FC = () => {
             <h3>Confirm Logout</h3>
             <p>Are you sure you want to logout?</p>
             <div className="logout-modal-buttons">
-              <button className="confirm-logout-btn" onClick={handleLogout}>
+              <button className="confirm-logout-btn" onClick={() => {}}>
                 Yes, Logout
               </button>
               <button

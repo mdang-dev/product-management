@@ -14,6 +14,7 @@ import {
 } from "../../../store/categoriesStore";
 import { Category } from "../../../models/category.model";
 import "../../../styles/CategoriesListPage.scss";
+import { useCategories } from "../../../hooks/useCategories";
 
 const CategoriesListPage = () => {
   const {
@@ -25,9 +26,8 @@ const CategoriesListPage = () => {
     setDeleteModalOpen,
   } = useCategoriesStore();
 
-  const { fetchCategories, updateCategory, removeCategory } =
-    useCategoriesQuery();
-  const categories = fetchCategories.data || [];
+
+  const { data: categories = [], update, remove } = useCategories();
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -42,7 +42,7 @@ const CategoriesListPage = () => {
   const confirmDelete = async () => {
     if (selectedCategory) {
       try {
-        await removeCategory.mutateAsync(selectedCategory.id);
+        await remove.mutate(selectedCategory.id);
         toast.success("Category deleted successfully!");
         setDeleteModalOpen(false);
         setSelectedCategory(null);
@@ -54,7 +54,7 @@ const CategoriesListPage = () => {
 
   const handleUpdateCategory = async (updatedCategory: Category) => {
     try {
-      await updateCategory.mutateAsync(updatedCategory);
+      await update.mutate(updatedCategory);
       toast.success("Category updated successfully!");
       setUpdateModalOpen(false);
       setSelectedCategory(null);
@@ -81,7 +81,7 @@ const CategoriesListPage = () => {
             <button
               onClick={() => {
                 setSelectedCategory(row.original);
-                setUpdateModalOpen(true);
+                setDeleteModalOpen(true);
               }}
               className="update-btn"
             >

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "../lib/queryClient";
+import { httpClient } from "../api/index";
 import { Product } from "../models/product.model";
 
 type ProductStore = {
@@ -28,7 +28,7 @@ export const useProductsQuery = () => {
   const fetchProducts = useQuery<Product[]>({
     queryKey: ["products"],
     queryFn: async () => {
-      const response = await api.get("/api/products");
+      const response = await httpClient.get("/api/products");
       return response.data;
     },
   });
@@ -50,7 +50,7 @@ export const useProductsQuery = () => {
         formData.append("imageFile", data.imageFile[0]);
       }
 
-      const response = await api.post("/api/products", formData);
+      const response = await httpClient.post("/api/products", formData);
 
       return response.data;
     },
@@ -77,7 +77,7 @@ export const useProductsQuery = () => {
         formData.append("imageFile", data.imageFile[0]);
       }
 
-      const response = await api.put(`/api/products`, formData);
+      const response = await httpClient.put(`/api/products`, formData);
       return response.data;
     },
     onSuccess: () => {
@@ -87,7 +87,7 @@ export const useProductsQuery = () => {
 
   const removeProduct = useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/api/products/${id}`);
+      await httpClient.delete(`/api/products/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });

@@ -48,7 +48,7 @@ const schema = yup.object().shape({
     .required("Price is required"),
 });
 
-const ProductForm = () => {
+const ProductFormPage = () => {
   const { fetchCategories } = useCategoriesQuery();
   const categories = fetchCategories.data || [];
   const { addProduct } = useProductsQuery();
@@ -125,4 +125,4 @@ const ProductForm = () => {
   );
 };
 
-export default ProductForm;
+export default ProductFormPage;

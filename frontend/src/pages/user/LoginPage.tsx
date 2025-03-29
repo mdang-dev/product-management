@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/LoginPage.scss";
 import { toast, ToastContainer } from "react-toastify";
-import { useAuth } from "../../provider/AuthProvider";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useSignIn } from "../../auth/useSignIn";
 
 interface FormData {
   username: string;
@@ -20,7 +20,6 @@ const schema = yup.object().shape({
 const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
 
   const {
     register,
@@ -30,19 +29,12 @@ const LoginPage: React.FC = () => {
     resolver: yupResolver(schema),
   });
 
+  const signIn = useSignIn();
+
   const handleLogin: SubmitHandler<FormData> = async (data) => {
     setIsLoading(true);
     try {
-      await login(data.username, data.password);
-      setTimeout(() => {
-        const storedRoles = JSON.parse(localStorage.getItem("is")!) || [];
-        if (storedRoles.includes("ADMIN")) {
-          navigate("/admin/products/list");
-        } else {
-          navigate("/");
-        }
-        toast.success("Login successful!");
-      }, 300);
+      signIn(data);
     } catch (error) {
       toast.error("Invalid username or password.");
     } finally {
@@ -100,7 +92,7 @@ const LoginPage: React.FC = () => {
         </button>
         <div className="login-page__footer">
           <p>
-            Don't have an account? <Link to="/sign-up">Sign Up</Link>
+            Don't have an account? <Link to="/auth/sign-up">Sign Up</Link>
           </p>
         </div>
       </form>

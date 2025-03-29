@@ -3,16 +3,9 @@ import { Outlet, useNavigate } from "react-router-dom";
 import "../../styles/Layout.scss";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
-const Layout: React.FC = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const storedRoles = JSON.parse(localStorage.getItem("is")!) || [];
-    if (!storedRoles.includes("ADMIN")) navigate("/");
-  }, []);
-
+export const AdminLayout: React.FC = () => {
   return (
     <div className="layout-container">
       <Sidebar />
@@ -23,5 +16,3 @@ const Layout: React.FC = () => {
     </div>
   );
 };
-
-export default Layout;

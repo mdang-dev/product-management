@@ -11,10 +11,11 @@ import "../../../styles/ProductListPage.scss";
 import { Product } from "../../../models/product.model";
 import UpdateProductModal from "./UpdateProductModal";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import { useProducts } from "../../../hooks/useProducts";
 
-const ProductTable = () => {
-  const { fetchProducts, updateProduct, removeProduct } = useProductsQuery();
-  const products = fetchProducts.data || [];
+const ProductListPage = () => {
+  const { updateProduct, removeProduct } = useProductsQuery();
+  const { data: products = [] } = useProducts();
   const {
     setSelectedProduct,
     setUpdateModalOpen,
@@ -200,4 +201,4 @@ const ProductTable = () => {
   );
 };
 
-export default ProductTable;
+export default ProductListPage;

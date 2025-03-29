@@ -2,10 +2,17 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "../../../lib/queryClient";
+import { httpClient, createCategory } from "../../../api/index";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../../../styles/CategoriesFormPage.scss";
+import { QUERY_KEY } from "../../../constants/queryKeys";
+import { useCategories } from "../../../hooks/useCategories";
+import { Category } from "../../../models";
+
+type FormCategory = {
+  name: string;
+}
 
 const schema = yup.object().shape({
   name: yup
@@ -14,37 +21,20 @@ const schema = yup.object().shape({
     .required("Name is required"),
 });
 
-type CategoryFormData = {
-  name: string;
-};
-
-const CategoriesPage: React.FC = () => {
-  const queryClient = useQueryClient();
-  const addCategoryMutation = useMutation<any, Error, CategoryFormData>({
-    mutationFn: async (data: CategoryFormData) => {
-      const response = await api.post("/api/categories", data);
-      return response.data;
-    },
-    onSuccess: () => {
-      toast.success("Category added successfully!");
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
-    },
-    onError: () => {
-      toast.error("Failed to add category.");
-    },
-  });
+const CategoriesFormPage: React.FC = () => {
+  const { create } = useCategories();
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CategoryFormData>({
+  } = useForm<FormCategory>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: CategoryFormData) => {
-    addCategoryMutation.mutate(data);
+  const onSubmit = (data: FormCategory) => {
+    create.mutate(data);
     reset();
   };
 
@@ -71,4 +61,4 @@ const CategoriesPage: React.FC = () => {
   );
 };
 
-export default CategoriesPage;
+export default CategoriesFormPage;

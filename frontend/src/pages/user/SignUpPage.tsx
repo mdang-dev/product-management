@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/RegisterPage.scss";
 import { toast, ToastContainer } from "react-toastify";
-import { api } from "../../lib/queryClient";
+import { httpClient } from "../../api/index";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -40,13 +40,17 @@ const RegisterPage: React.FC = () => {
   const handleRegister: SubmitHandler<FormData> = async (data) => {
     setIsLoading(true);
     try {
-      const response = await api.post("/api/auth/register", {
+      const response = await httpClient.post("/api/auth/register", {
         username: data.username,
         password: data.password,
       });
 
       if (response.status !== 201) {
-        toast.error(response.data.message || "Failed to register.");
+        toast.error(
+          typeof response.data === "string"
+            ? response.data
+            : "Failed to register."
+        );
         return;
       }
 
@@ -130,7 +134,7 @@ const RegisterPage: React.FC = () => {
         </button>
         <div className="register-page__footer">
           <p>
-            Already have an account? <Link to="/login">Login</Link>
+            Already have an account? <Link to="/auth/sign-in">Login</Link>
           </p>
         </div>
       </form>

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import ApiSer from "../api/index"
+import {httpClient} from "../api/index"
 type Category = {
   id: string;
   name: string;
@@ -30,14 +30,14 @@ export const useCategoriesQuery = () => {
   const fetchCategories = useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: async (): Promise<Category[]> => {
-      const response = await ApiService.get("/api/categories");
+      const response = await httpClient.get("/api/categories");
       return response.data as Category[];
     },
   });
 
   const addCategory = useMutation({
     mutationFn: async (data: Partial<Category>) => {
-      const response = await .post("/api/categories", data);
+      const response = await httpClient.post("/api/categories", data);
       return response.data;
     },
     onSuccess: () => {
@@ -47,7 +47,7 @@ export const useCategoriesQuery = () => {
 
   const updateCategory = useMutation({
     mutationFn: async (updatedCategory: Category) => {
-      const response = await .put(`/api/categories`, updatedCategory);
+      const response = await httpClient.put(`/api/categories`, updatedCategory);
       return response.data;
     },
     onSuccess: () => {
@@ -57,7 +57,7 @@ export const useCategoriesQuery = () => {
 
   const removeCategory = useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/api/categories/${id}`);
+      await httpClient.delete(`/api/categories/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });

@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { AlignJustify, Tag, Box, CornerRightUp, LogOut } from "lucide-react";
 import "../../styles/Sidebar.scss";
 
-import { useAuth } from "../../provider/AuthProvider";
-
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
   const [menuState, setMenuState] = useState({
@@ -13,19 +11,12 @@ const Sidebar = () => {
   });
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
-  const { logout } = useAuth();
-
   const toggleMenu = useCallback((menu: "categories" | "products") => {
     setMenuState((prev) => ({
       ...prev,
       [menu]: !prev[menu],
     }));
   }, []);
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
 
   return (
     <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
@@ -103,7 +94,7 @@ const Sidebar = () => {
             <h3 style={{ color: "black" }}>Confirm Logout</h3>
             <p>Are you sure you want to logout?</p>
             <div className="logout-modal-buttons">
-              <button className="confirm-logout-btn" onClick={handleLogout}>
+              <button className="confirm-logout-btn" onClick={() => {}}>
                 Yes, Logout
               </button>
               <button

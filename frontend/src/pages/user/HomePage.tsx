@@ -1,21 +1,15 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import ProductCard from "../../components/ProductCard";
 import "../../styles/HomePage.scss";
-import { Product } from "../../models/product.model";
-import Product1 from "../../assets/images/product1.png";
-import Product2 from "../../assets/images/product2.png";
-import Product3 from "../../assets/images/product3.png";
-import Product4 from "../../assets/images/product4.png";
-import Product5 from "../../assets/images/product5.png";
-import Product6 from "../../assets/images/product6.png";
-import Product7 from "../../assets/images/product7.png";
-import Product8 from "../../assets/images/product8.png";
-import { useProductsQuery } from "../../store/productStore";
+import { useQuery } from "@tanstack/react-query";
+import { QUERY_KEY } from "../../constants/queryKeys";
+import { fetchProducts } from "../../api/index";
 
 const HomePage: React.FC = () => {
-  const { fetchProducts } = useProductsQuery();
-
-  const { data: products = [] } = fetchProducts;
+  const { data: products = [] } = useQuery({
+    queryKey: [QUERY_KEY.products],
+    queryFn: fetchProducts,
+  });
 
   return (
     <div className="home-page">

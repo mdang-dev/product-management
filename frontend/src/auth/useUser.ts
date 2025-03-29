@@ -7,8 +7,8 @@ import * as tokenStore from "./token.store"
 import * as userLocalStore from "./user.localstore"
 import { useEffect } from "react";
 
-async function getUser(): Promise<User | null> {
-    const response = await httpClient.get<User>('/users/my-info');
+export async function getUser(): Promise<User | null> {
+    const response = await httpClient.get<User>('/api/users/my-info');
     if(response.status === 401){
         throw new ResponseError('Fail on get user request', response);
     }
@@ -26,7 +26,6 @@ export function useUser(): IUseUser {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    staleTime: 1000 * 60 * 5,
     initialData: userLocalStore.getUser,
     enabled: !!tokenStore.getToken
 })
@@ -34,7 +33,7 @@ export function useUser(): IUseUser {
 useEffect(() => {
     if(!user) userLocalStore.removeUser();
     else userLocalStore.saveUser(user);
-}, [])
+}, [user])
 
 return {
     user: user ?? null

@@ -1,14 +1,19 @@
 import { AxiosResponse } from "axios";
 import { Category } from "../models/category.model";
 import {httpClient} from "./index"
+import { ResponseError } from "../utils/Errors/ResponseError";
 
 const API_URL = "/api/categories";
 
-export const fetchCategories = async () :  Promise<AxiosResponse<Category[]>> => {
-	return httpClient.get<Category[]>(API_URL);
+export const fetchCategories = async () :  Promise<Category[]> => {
+    console.log('api called !')
+	const response = await httpClient.get<Category[]>('/api/categories');
+    if(response.status > 201)
+        throw new ResponseError('Fail on fetch categories', response);
+    return response.data
 }
 
-export const createCategory = async (data: Category):Promise<AxiosResponse> => {
+export const createCategory = async (data: {name: string}):Promise<AxiosResponse> => { 
     return httpClient.post(API_URL, data)
 }
 

@@ -9,7 +9,7 @@ class HttpClient {
     private isRefreshing = false;
     private refreshSubscribers: ((token: string) => void)[] = [];
     private readonly SESSION_TIMEOUT = 24 * 60 * 60 * 1000;
-    private readonly BASE_URL = process.env.URL || "";
+    private readonly BASE_URL = process.env.url || "";
 
     private constructor() {
         this.api = axios.create({
@@ -30,9 +30,16 @@ class HttpClient {
 
     private async handleRequest(config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> {
 
-       let token = tokenStore.getToken();
+        const publicRoutes = ["/api/auth/login", "/api/auth/register", "/api/products"];
 
-       if(!token || tokenStore.isSessionExpired(this.SESSION_TIMEOUT)){
+        if (publicRoutes.some(route => config.url?.startsWith(route))) {
+            return config;
+        }
+
+       let token = tokenStore.getToken();
+       
+
+       if(!token && tokenStore.isSessionExpired(this.SESSION_TIMEOUT)){
           try {
             token = await this.refreshToken();
           } catch (error) {
