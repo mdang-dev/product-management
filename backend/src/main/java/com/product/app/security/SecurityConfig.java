@@ -48,15 +48,14 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
-    private final String[] ACCESS_ENDPOINTS = {"/api/auth/**", "/users/logout", "/products/**"};
+    private final String[] ACCESS_ENDPOINTS = {"/api/auth/**", "/users/logout", "/products/**", "/api/public/products" };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize ->
-                                authorize.requestMatchers(HttpMethod.GET, "/api/products").permitAll()
-                        .requestMatchers(ACCESS_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated()
+                                authorize.requestMatchers(ACCESS_ENDPOINTS).permitAll()
+                                        .anyRequest().authenticated()
                 ).userDetailsService(userDetailsService)
                 .exceptionHandling(ex -> ex.accessDeniedHandler(((request, response, accessDeniedException) -> response.setStatus(403)))
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))

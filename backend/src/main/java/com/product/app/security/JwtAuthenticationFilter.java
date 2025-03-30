@@ -43,8 +43,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull  HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-     String token = jwtUtil.getTokenFromRequest(request);
      try {
+            String token = jwtUtil.getTokenFromRequest(request);
             boolean isTokenValid = tokenRepository.findByToken(token)
                     .map(t -> !t.getExpired() && !t.getRevoked())
                     .orElse(false);
