@@ -25,6 +25,7 @@ export const useCategoriesStore = create<CategoriesStore>((set) => ({
 }));
 
 export const useCategoriesQuery = () => {
+  
   const queryClient = useQueryClient();
 
   const fetchCategories = useQuery<Category[]>({

@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import * as userLocalStore from "./user.localstore"
 import * as tokenStore from "./token.store"
 import { useNavigate } from "react-router-dom";
-import { useUser, getUser } from "./useUser";
+import { getUser } from "./useUser";
 
 type AuthResponse = {
     token: string;

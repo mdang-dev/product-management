@@ -1,33 +1,23 @@
-import React, { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import UpdateCategoryModal from "./UpdateCategoryModal";
-import { toast, ToastContainer } from "react-toastify";
-import {
-  useCategoriesQuery,
-  useCategoriesStore,
-} from "../../../store/categoriesStore";
 import { Category } from "../../../models/category.model";
 import "../../../styles/CategoriesListPage.scss";
 import { useCategories } from "../../../hooks/useCategories";
+import { useModal } from "../../../hooks/useModal";
 
 const CategoriesListPage = () => {
-  const {
-    selectedCategory,
-    isUpdateModalOpen,
-    isDeleteModalOpen,
-    setSelectedCategory,
-    setUpdateModalOpen,
-    setDeleteModalOpen,
-  } = useCategoriesStore();
-
 
   const { data: categories = [], update, remove } = useCategories();
+
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+
+  const openModal = useModal((set) => set.openModal);
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -39,28 +29,19 @@ const CategoriesListPage = () => {
     [categories, searchTerm]
   );
 
-  const confirmDelete = async () => {
-    if (selectedCategory) {
-      try {
-        await remove.mutate(selectedCategory.id);
-        toast.success("Category deleted successfully!");
-        setDeleteModalOpen(false);
-        setSelectedCategory(null);
-      } catch {
-        toast.error("Failed to delete category.");
-      }
+  const handleDeleteClick = useCallback((category: Category) => {
+    if (category) {
+      openModal(
+        "Confirm Deletion",
+        "Are you sure you want to delete this item?",
+        "delete",
+        () => remove(category.id)
+      );
     }
-  };
+  }, []);
 
-  const handleUpdateCategory = async (updatedCategory: Category) => {
-    try {
-      await update.mutate(updatedCategory);
-      toast.success("Category updated successfully!");
-      setUpdateModalOpen(false);
-      setSelectedCategory(null);
-    } catch {
-      toast.error("Failed to update category.");
-    }
+  const handleUpdateCategory = (updatedCategory: Category) => {
+    update(updatedCategory);
   };
 
   const columns = useMemo<ColumnDef<Category>[]>(
@@ -81,7 +62,6 @@ const CategoriesListPage = () => {
             <button
               onClick={() => {
                 setSelectedCategory(row.original);
-                setDeleteModalOpen(true);
               }}
               className="update-btn"
             >
@@ -89,8 +69,7 @@ const CategoriesListPage = () => {
             </button>
             <button
               onClick={() => {
-                setSelectedCategory(row.original);
-                setDeleteModalOpen(true);
+                handleDeleteClick(row.original);
               }}
               className="delete-btn"
             >
@@ -155,24 +134,13 @@ const CategoriesListPage = () => {
           ))}
         </tbody>
       </table>
-      {isUpdateModalOpen && selectedCategory && (
+      {selectedCategory && (
         <UpdateCategoryModal
           category={selectedCategory}
           onClose={() => {
-            setUpdateModalOpen(false);
             setSelectedCategory(null);
           }}
           onUpdate={handleUpdateCategory}
-        />
-      )}
-      {isDeleteModalOpen && selectedCategory && (
-        <ConfirmDeleteModal
-          categoryName={selectedCategory.name}
-          onClose={() => {
-            setDeleteModalOpen(false);
-            setSelectedCategory(null);
-          }}
-          onConfirm={confirmDelete}
         />
       )}
     </div>

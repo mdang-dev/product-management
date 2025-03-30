@@ -1,5 +1,4 @@
 import React from "react";
-import "../../../styles/Modal.scss";
 
 type ConfirmDeleteModalProps = {
   isOpen: boolean;

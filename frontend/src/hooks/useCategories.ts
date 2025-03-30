@@ -16,7 +16,7 @@ export const useCategories = () => {
         refetchOnWindowFocus: false
     });
 
-    const create = useMutation({
+    const {mutate: create} = useMutation({
         mutationFn: (data: {name: string}) => createCategory(data),
         onSuccess: () => {
             toast.success('Category added successfully!');
@@ -27,7 +27,7 @@ export const useCategories = () => {
         }
     });
 
-    const update = useMutation({
+    const {mutate: update} = useMutation({
         mutationFn: (data: Category) => updateCategory(data),
         onSuccess: () => {
             toast.success('Category updated successfully!');
@@ -38,7 +38,7 @@ export const useCategories = () => {
         }
     });
 
-    const remove = useMutation({
+    const {mutate: remove} = useMutation({
         mutationFn: (id: string) => deleteCategory(id),
         onSuccess: () => {
             toast.success('Category deleted successfully!');

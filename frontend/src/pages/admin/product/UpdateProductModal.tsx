@@ -3,12 +3,12 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import "../../../styles/UpdateProductModal.scss";
+import { Product } from "../../../models";
 
 type UpdateProductModalProps = {
-  isOpen: boolean;
+  product: any;
   onClose: () => void;
-  onSubmit: (data: any) => void;
-  initialData: any;
+  onUpdate: (product: Product) => void;
 };
 
 const schema = yup.object().shape({
@@ -49,10 +49,9 @@ const schema = yup.object().shape({
 });
 
 const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
-  isOpen,
+  product,
   onClose,
-  onSubmit,
-  initialData,
+  onUpdate,
 }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -64,17 +63,16 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: initialData,
+    defaultValues: product,
   });
 
   const watchImageFile = watch("imageFile");
 
   useEffect(() => {
-    if (isOpen) {
-      reset({ ...initialData });
-      setImagePreview(initialData?.imageUrl || null);
+    if (product) {
+      setImagePreview(product?.imageUrl || null);
     }
-  }, [isOpen, initialData, reset]);
+  }, [product]);
 
   useEffect(() => {
     if (watchImageFile && watchImageFile.length > 0) {
@@ -87,7 +85,9 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
     }
   }, [watchImageFile]);
 
-  if (!isOpen) return null;
+  const onSubmit = (data: Product) => {
+    onUpdate(data);
+  };
 
   return (
     <div className="update-modal update-modal-transition">

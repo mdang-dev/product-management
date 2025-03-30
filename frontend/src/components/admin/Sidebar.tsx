@@ -2,6 +2,8 @@ import { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AlignJustify, Tag, Box, CornerRightUp, LogOut } from "lucide-react";
 import "../../styles/Sidebar.scss";
+import { useModal } from "../../hooks/useModal";
+import { useSignOut } from "../../auth/useSignOut";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
@@ -9,8 +11,20 @@ const Sidebar = () => {
     categories: false,
     products: false,
   });
-  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
+  const signOut = useSignOut();
+  const openModal = useModal((set) => set.openModal);
+  const handleSignOut = () => {
+    openModal(
+      "Delete Item",
+      "Are you sure you want to delete this item?",
+      "logout",
+      () => {
+        signOut();
+        navigate("/auth/sign-in");
+      }
+    );
+  };
   const toggleMenu = useCallback((menu: "categories" | "products") => {
     setMenuState((prev) => ({
       ...prev,
@@ -77,36 +91,13 @@ const Sidebar = () => {
             </div>
           </li>
           <li>
-            <div
-              className="menu-item"
-              onClick={() => setLogoutModalOpen(true)} // Open logout modal
-            >
+            <div className="menu-item" onClick={handleSignOut}>
               <LogOut size={20} />
               <span className="text">Logout</span>
             </div>
           </li>
         </ul>
       </nav>
-
-      {isLogoutModalOpen && (
-        <div className="logout-modal">
-          <div className="logout-modal-content">
-            <h3 style={{ color: "black" }}>Confirm Logout</h3>
-            <p>Are you sure you want to logout?</p>
-            <div className="logout-modal-buttons">
-              <button className="confirm-logout-btn" onClick={() => {}}>
-                Yes, Logout
-              </button>
-              <button
-                className="cancel-logout-btn"
-                onClick={() => setLogoutModalOpen(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

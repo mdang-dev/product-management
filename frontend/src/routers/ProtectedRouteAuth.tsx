@@ -4,15 +4,9 @@ import { Navigate } from "react-router-dom";
 
 type ProtectedRouteProps = PropsWithChildren;
 
-export default function ProtectedRoute({ children }: ProtectedRouteProps) {
+export function ProtectedRouteAuth({ children }: ProtectedRouteProps) {
   const { user } = useUser();
-  
-  const isAdmin = user?.roles.some((role) => role.name === "ADMIN");
-
-  if (!isAdmin) {
-    return <Navigate to="/" replace />;
-  }
-
+  if (user) return <Navigate to="/" replace />;
 
   return <>{children}</>;
 }

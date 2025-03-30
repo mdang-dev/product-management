@@ -12,13 +12,23 @@ class HttpClient {
     private readonly BASE_URL = process.env.url || "";
 
     private constructor() {
+
+        
+
         this.api = axios.create({
             baseURL: this.BASE_URL,
             timeout: 10000,
         });
 
-        this.api.interceptors.request.use(this.handleRequest, this.handleRequestError);
-        this.api.interceptors.response.use((response) => response, this.handleResponseError);
+        this.api.interceptors.request.use(
+            (config) => this.handleRequest(config), 
+            (error) => this.handleRequestError(error)
+        );
+
+        this.api.interceptors.response.use(
+            (response) => response, 
+            (error) => this.handleResponseError(error)
+        );
     }
 
     static getInstance(): HttpClient {
@@ -30,7 +40,7 @@ class HttpClient {
 
     private async handleRequest(config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> {
 
-        const publicRoutes = ["/api/auth/login", "/api/auth/register", "/api/products"];
+        const publicRoutes = ["/api/auth/login", "/api/auth/register", "/api/public/products"];
 
         if (publicRoutes.some(route => config.url?.startsWith(route))) {
             return config;
@@ -39,7 +49,7 @@ class HttpClient {
        let token = tokenStore.getToken();
        
 
-       if(!token && tokenStore.isSessionExpired(this.SESSION_TIMEOUT)){
+       if(!token){
           try {
             token = await this.refreshToken();
           } catch (error) {
@@ -64,6 +74,8 @@ class HttpClient {
         const status = error.response?.status;
 
         if (status === 401 || status === 403) {
+            console.log(error.response);
+            
             this.forceLogout();
         }
 

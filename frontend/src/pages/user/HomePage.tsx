@@ -3,12 +3,12 @@ import ProductCard from "../../components/ProductCard";
 import "../../styles/HomePage.scss";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEY } from "../../constants/queryKeys";
-import { fetchProducts } from "../../api/index";
+import { fetchProductsPublic } from "../../api/index";
 
 const HomePage: React.FC = () => {
   const { data: products = [] } = useQuery({
     queryKey: [QUERY_KEY.products],
-    queryFn: fetchProducts,
+    queryFn: fetchProductsPublic,
   });
 
   return (

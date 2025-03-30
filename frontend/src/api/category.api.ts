@@ -6,7 +6,6 @@ import { ResponseError } from "../utils/Errors/ResponseError";
 const API_URL = "/api/categories";
 
 export const fetchCategories = async () :  Promise<Category[]> => {
-    console.log('api called !')
 	const response = await httpClient.get<Category[]>('/api/categories');
     if(response.status > 201)
         throw new ResponseError('Fail on fetch categories', response);

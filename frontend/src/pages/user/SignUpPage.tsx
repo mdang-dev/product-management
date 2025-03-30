@@ -6,6 +6,7 @@ import { httpClient } from "../../api/index";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useSignUp } from "../../auth/useSignUp";
 
 interface FormData {
   username: string;
@@ -26,6 +27,7 @@ const schema = yup.object().shape({
 });
 
 const RegisterPage: React.FC = () => {
+  const signUp = useSignUp();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -38,27 +40,10 @@ const RegisterPage: React.FC = () => {
   });
 
   const handleRegister: SubmitHandler<FormData> = async (data) => {
+    const { username, password } = data;
     setIsLoading(true);
     try {
-      const response = await httpClient.post("/api/auth/register", {
-        username: data.username,
-        password: data.password,
-      });
-
-      if (response.status !== 201) {
-        toast.error(
-          typeof response.data === "string"
-            ? response.data
-            : "Failed to register."
-        );
-        return;
-      }
-
-      toast.success("Registration successful!");
-      navigate("/login");
-    } catch (error) {
-      console.error("Error registering user:", error);
-      toast.error("An error occurred. Please try again.");
+      signUp({ username, password });
     } finally {
       setIsLoading(false);
     }

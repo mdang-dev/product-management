@@ -1,14 +1,9 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { httpClient, createCategory } from "../../../api/index";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../../../styles/CategoriesFormPage.scss";
-import { QUERY_KEY } from "../../../constants/queryKeys";
 import { useCategories } from "../../../hooks/useCategories";
-import { Category } from "../../../models";
 
 type FormCategory = {
   name: string;
@@ -34,7 +29,7 @@ const CategoriesFormPage: React.FC = () => {
   });
 
   const onSubmit = (data: FormCategory) => {
-    create.mutate(data);
+    create(data);
     reset();
   };
 

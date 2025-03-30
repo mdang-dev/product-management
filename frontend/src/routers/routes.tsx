@@ -1,4 +1,3 @@
-import React, { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import {
   CategoriesFormPage,
@@ -13,6 +12,7 @@ import {
 
 import { MainLayout, AdminLayout } from "../layout/index";
 import ProtectedRoute from "./ProtectedRoute";
+import { ProtectedRouteAuth } from "./ProtectedRouteAuth";
 
 export const routes = createBrowserRouter([
   {
@@ -24,10 +24,23 @@ export const routes = createBrowserRouter([
 
   {
     path: "/auth",
-    element: <ProtectedRoute />,
     children: [
-      { path: "sign-in", element: <LoginPage /> },
-      { path: "sign-up", element: <SignUpPage /> },
+      {
+        path: "sign-in",
+        element: (
+          <ProtectedRouteAuth>
+            <LoginPage />
+          </ProtectedRouteAuth>
+        ),
+      },
+      {
+        path: "sign-up",
+        element: (
+          <ProtectedRouteAuth>
+            <SignUpPage />
+          </ProtectedRouteAuth>
+        ),
+      },
     ],
   },
   {

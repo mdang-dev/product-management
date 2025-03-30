@@ -5,27 +5,17 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-import { useProductsQuery, useProductStore } from "../../../store/productStore";
-import { toast } from "react-toastify";
 import "../../../styles/ProductListPage.scss";
 import { Product } from "../../../models/product.model";
 import UpdateProductModal from "./UpdateProductModal";
-import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import { useProducts } from "../../../hooks/useProducts";
+import { useModal } from "../../../hooks/useModal";
 
 const ProductListPage = () => {
-  const { updateProduct, removeProduct } = useProductsQuery();
-  const { data: products = [] } = useProducts();
-  const {
-    setSelectedProduct,
-    setUpdateModalOpen,
-    setDeleteModalOpen,
-    selectedProduct,
-    isUpdateModalOpen,
-    isDeleteModalOpen,
-  } = useProductStore();
-
-  const [searchTerm, setSearchTerm] = useState("");
+  const openModal = useModal((set) => set.openModal);
+  const { data: products = [], remove, update } = useProducts();
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const filteredProducts = useMemo(
     () =>
@@ -37,51 +27,21 @@ const ProductListPage = () => {
 
   const handleUpdateClick = useCallback((product: Product) => {
     setSelectedProduct(product);
-    setUpdateModalOpen(true);
   }, []);
 
   const handleDeleteClick = useCallback((product: Product) => {
-    setSelectedProduct(product);
-    setDeleteModalOpen(true);
+    if (product) {
+      openModal(
+        "Confirm Deletion",
+        "Are you sure you want to delete this item?",
+        "delete",
+        () => remove(product.id)
+      );
+    }
   }, []);
 
-  const handleCloseUpdateModal = () => {
-    setUpdateModalOpen(false);
-    setSelectedProduct(null);
-  };
-
-  const handleCloseDeleteModal = () => {
-    setDeleteModalOpen(false);
-    setSelectedProduct(null);
-  };
-
-  const confirmDelete = async () => {
-    try {
-      if (selectedProduct) {
-        await removeProduct.mutateAsync(selectedProduct.id);
-        toast.success("Product deleted successfully!");
-      }
-      handleCloseDeleteModal();
-    } catch (error) {
-      console.error("Error deleting product:", error);
-      toast.error("Failed to delete product.");
-    }
-  };
-
-  const handleUpdateSubmit = async (data: Product) => {
-    try {
-      if (selectedProduct) {
-        await updateProduct.mutateAsync({
-          ...selectedProduct,
-          ...data,
-        });
-        toast.success("Product updated successfully!");
-      }
-      handleCloseUpdateModal();
-    } catch (error) {
-      console.error("Error updating product:", error);
-      toast.error("Failed to update product.");
-    }
+  const handleUpdateSubmit = (data: Product) => {
+    update(data);
   };
 
   const columns = useMemo<ColumnDef<Product>[]>(
@@ -185,18 +145,13 @@ const ProductListPage = () => {
         </tbody>
       </table>
 
-      <UpdateProductModal
-        isOpen={isUpdateModalOpen}
-        onClose={handleCloseUpdateModal}
-        onSubmit={handleUpdateSubmit}
-        initialData={selectedProduct}
-      />
-
-      <ConfirmDeleteModal
-        isOpen={isDeleteModalOpen}
-        onClose={handleCloseDeleteModal}
-        onConfirm={confirmDelete}
-      />
+      {selectedProduct && (
+        <UpdateProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onUpdate={handleUpdateSubmit}
+        />
+      )}
     </div>
   );
 };

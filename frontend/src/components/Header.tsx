@@ -12,12 +12,24 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../auth/useUser";
+import { useSignOut } from "../auth/useSignOut";
+import { useModal } from "../hooks/useModal";
+
 
 const Header: React.FC = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
-  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
   const { user } = useUser();
+  const signOut = useSignOut();
+  const openModal = useModal((set) => set.openModal);
+  const handleSignOut = () => {
+    openModal(
+      "Delete Item",
+      "Are you sure you want to delete this item?",
+      "logout",
+      signOut
+    );
+  };
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
   };
@@ -81,10 +93,7 @@ const Header: React.FC = () => {
               <div className="flex">
                 <span className="header__hi-user">Hi:</span>
                 <span>@{user?.username}</span>
-                <button
-                  className="header__auth-button"
-                  onClick={() => setLogoutModalOpen(true)}
-                >
+                <button className="header__auth-button" onClick={handleSignOut}>
                   <LogIn size={16} /> Logout
                 </button>
               </div>
@@ -92,26 +101,6 @@ const Header: React.FC = () => {
           )}
         </div>
       </div>
-
-      {isLogoutModalOpen && (
-        <div className="logout-modal">
-          <div className="logout-modal-content">
-            <h3>Confirm Logout</h3>
-            <p>Are you sure you want to logout?</p>
-            <div className="logout-modal-buttons">
-              <button className="confirm-logout-btn" onClick={() => {}}>
-                Yes, Logout
-              </button>
-              <button
-                className="cancel-logout-btn"
-                onClick={() => setLogoutModalOpen(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </header>
   );
 };

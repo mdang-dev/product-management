@@ -3,16 +3,17 @@ import "../../../styles/UpdateCategoryModal.scss";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
+import { Category } from "../../../models/index";
 
 type UpdateCategoryModalProps = {
-  category: { id: string; name: string };
+  category: Category;
   onClose: () => void;
-  onUpdate: (updatedCategory: { id: string; name: string }) => void;
+  onUpdate: (updatedCategory: Category) => void;
 };
 
 type FormInput = {
   name: string;
-}
+};
 
 const schema = yup.object().shape({
   name: yup.string().required("Category name is required"),
@@ -23,11 +24,7 @@ const UpdateCategoryModal: React.FC<UpdateCategoryModalProps> = ({
   onClose,
   onUpdate,
 }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormInput>({
+  const { register, handleSubmit } = useForm<FormInput>({
     resolver: yupResolver(schema),
     defaultValues: category,
   });
