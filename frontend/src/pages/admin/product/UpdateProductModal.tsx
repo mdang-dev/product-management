@@ -70,6 +70,7 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
 
   useEffect(() => {
     if (product) {
+      reset(product);
       setImagePreview(product?.imageUrl || null);
     }
   }, [product]);
@@ -87,6 +88,7 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
 
   const onSubmit = (data: Product) => {
     onUpdate(data);
+    onClose();
   };
 
   return (

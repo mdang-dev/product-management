@@ -148,7 +148,9 @@ const ProductListPage = () => {
       {selectedProduct && (
         <UpdateProductModal
           product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
+          onClose={() => {
+            setSelectedProduct(null);
+          }}
           onUpdate={handleUpdateSubmit}
         />
       )}

@@ -4,8 +4,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import "../../../styles/ProductFormPage.scss";
-import { useCategoriesQuery } from "../../../store/categoriesStore";
-import { useProductsQuery } from "../../../store/productStore";
+import { useCategories } from "../../../hooks/useCategories";
+import { useProducts } from "../../../hooks/useProducts";
 type ProductForm = {
   id?: string;
   name: string;
@@ -49,9 +49,9 @@ const schema = yup.object().shape({
 });
 
 const ProductFormPage = () => {
-  const { fetchCategories } = useCategoriesQuery();
-  const categories = fetchCategories.data || [];
-  const { addProduct } = useProductsQuery();
+  const { data: categories = [] } = useCategories();
+  const { create } = useProducts();
+
   const {
     register,
     handleSubmit,
@@ -62,30 +62,24 @@ const ProductFormPage = () => {
   });
 
   const onSubmit = async (data: ProductForm) => {
-    try {
-      const selectedCategory = categories.find(
-        (cat) => cat.id === data.category.id
-      );
-      if (!selectedCategory) {
-        toast.error("Invalid category selected.");
-        return;
-      }
-
-      await addProduct.mutateAsync({
-        name: data.name,
-        description: data.description || "",
-        imageFile: data.imageFile,
-        category: selectedCategory,
-        quantity: data.quantity,
-        price: data.price,
-      });
-
-      toast.success("Product created successfully!");
-      reset();
-    } catch (error) {
-      console.error("Error creating product:", error);
-      toast.error("Failed to create product.");
+    const selectedCategory = categories.find(
+      (cat) => cat.id === data.category.id
+    );
+    if (!selectedCategory) {
+      toast.error("Invalid category selected.");
+      return;
     }
+
+    create({
+      id: data.id || "",
+      name: data.name,
+      description: data.description || "",
+      imageFile: data.imageFile,
+      category: selectedCategory,
+      quantity: data.quantity,
+      price: data.price,
+    });
+    setTimeout(() => reset(), 500);
   };
 
   return (
@@ -100,7 +94,11 @@ const ProductFormPage = () => {
         <p className="error">{errors.description?.message}</p>
         <label>Image File</label>
         <div className="file-input-container">
-          <input type="file" {...register("imageFile")} className="file-input" />
+          <input
+            type="file"
+            {...register("imageFile")}
+            className="file-input"
+          />
         </div>
         <p className="error">{errors.imageFile?.message}</p>
         <label>Category</label>
