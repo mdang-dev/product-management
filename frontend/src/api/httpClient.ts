@@ -12,8 +12,6 @@ class HttpClient {
 
     private constructor() {
 
-        
-
         this.api = axios.create({
             baseURL: this.BASE_URL,
             timeout: 10000,
@@ -68,36 +66,6 @@ class HttpClient {
         }
 
         return Promise.reject(error);
-    }
-
-    private async refreshToken(): Promise<string> {
-        if (this.isRefreshing) {
-            return new Promise((resolve) => this.refreshSubscribers.push(resolve));
-        }
-
-        this.isRefreshing = true;
-
-        try {
-            const response = await this.get<{ token: string }>("/users/refresh");
-            const newToken = response.data.token;
-
-            tokenStore.setToken(newToken);
-            this.api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
-
-            this.refreshSubscribers.forEach((callback) => callback(newToken));
-            this.refreshSubscribers = [];
-
-            return newToken;
-        } catch (error) {
-            this.forceLogout();
-            throw error;
-        } finally {
-            this.isRefreshing = false;
-        }
-    }
-
-    private forceLogout(): void {
-        tokenStore.clearToken();
     }
 
     private logError(error: AxiosError): void {
