@@ -9,7 +9,7 @@ import { useEffect } from "react";
 
 export async function getUser(): Promise<User | null> {
     const response = await httpClient.get<User>('/api/users/my-info');
-    if(response.status === 401){
+    if(response.status > 201){
         throw new ResponseError('Fail on get user request', response);
     }
     return response.data;

@@ -3,9 +3,12 @@ import { httpClient } from "../api";
 import { UseMutateFunction, useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { ResponseError } from "../utils/Errors/ResponseError";
 
 async function signUp(data: {username: string, password: string}): Promise<AxiosResponse> {
     const response = await httpClient.post('/api/auth/register', data);
+    if(response.status > 201) 
+        throw new ResponseError('Fail on sign up requet', response);
     return response;
 }
 

@@ -15,7 +15,7 @@ type AuthResponse = {
 
 async function signIn(data : {username: string, password: string}):Promise<AuthResponse> {
     const response = await httpClient.post<AuthResponse>(`/api/auth/login`, data);
-    if(response.status === 401) {
+    if(response.status > 201) {
         throw new ResponseError('Fail on sign in request', response);
     }
     return { token: response.data.token };
