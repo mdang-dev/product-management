@@ -35,7 +35,7 @@ export const useProducts = () => {
                 formData.append("imageFile", data.imageFile[0]);
               }
         
-              createProduct(formData);
+             await createProduct(formData);
         },
         onSuccess: () => {
             toast.success('Product added successfully!');
@@ -65,7 +65,7 @@ export const useProducts = () => {
                formData.append("imageFile", data.imageFile[0]);
              }
 
-             updateProduct(formData);
+            await updateProduct(formData);
            },
         onSuccess: async () => {
             toast.success('Product updated successfully!');
@@ -77,7 +77,7 @@ export const useProducts = () => {
     });
 
     const {mutate: remove} = useMutation({
-        mutationFn: (id: string) => deleteProduct(id),
+        mutationFn: async (id: string) => await deleteProduct(id),
         onSuccess: () => {
             toast.success('Category deleted successfully!');
             queryClient.invalidateQueries({queryKey: [QUERY_KEY.products]})

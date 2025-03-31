@@ -8,7 +8,6 @@ class HttpClient {
     private api: AxiosInstance;
     private isRefreshing = false;
     private refreshSubscribers: ((token: string) => void)[] = [];
-    private readonly SESSION_TIMEOUT = 24 * 60 * 60 * 1000;
     private readonly BASE_URL = process.env.url || "";
 
     private constructor() {
@@ -46,40 +45,25 @@ class HttpClient {
             return config;
         }
 
-       let token = tokenStore.getToken();
+        let token = tokenStore.getToken();
        
-
-       if(!token){
-          try {
-            token = await this.refreshToken();
-          } catch (error) {
-            this.forceLogout();
-          }
-       }
-
-       if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
 
       return config;
 
     }
 
     private handleRequestError = (error: AxiosError): Promise<never> => {
-        console.error("Request Error:", error);
+        this.logError(error);
         return Promise.reject(error);
     };
 
     private async handleResponseError(error: AxiosError): Promise<AxiosError | void> {
         const status = error.response?.status;
 
-        if (status === 401 || status === 403) {
-            console.log(error.response);
-            
-            this.forceLogout();
-        }
-
-        if (status === 500) {
+        if (status === 401 || status === 403 || status === 500) {
             this.logError(error);
         }
 

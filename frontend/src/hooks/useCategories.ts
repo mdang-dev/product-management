@@ -17,7 +17,7 @@ export const useCategories = () => {
     });
 
     const {mutate: create} = useMutation({
-        mutationFn: (data: {name: string}) => createCategory(data),
+        mutationFn:async (data: {name: string}) => await createCategory(data),
         onSuccess: () => {
             toast.success('Category added successfully!');
             queryClient.invalidateQueries({queryKey: [QUERY_KEY.categories]})
@@ -28,7 +28,7 @@ export const useCategories = () => {
     });
 
     const {mutate: update} = useMutation({
-        mutationFn: (data: Category) => updateCategory(data),
+        mutationFn: async (data: Category) => await updateCategory(data),
         onSuccess: () => {
             toast.success('Category updated successfully!');
             queryClient.invalidateQueries({queryKey: [QUERY_KEY.categories]})
@@ -39,7 +39,7 @@ export const useCategories = () => {
     });
 
     const {mutate: remove} = useMutation({
-        mutationFn: (id: string) => deleteCategory(id),
+        mutationFn: async (id: string) => await deleteCategory(id),
         onSuccess: () => {
             toast.success('Category deleted successfully!');
             queryClient.invalidateQueries({queryKey: [QUERY_KEY.categories]})
