@@ -16,8 +16,8 @@ const Sidebar = () => {
   const openModal = useModal((set) => set.openModal);
   const handleSignOut = () => {
     openModal(
-      "Delete Item",
-      "Are you sure you want to delete this item?",
+      "Confirm Logout",
+      "Are you sure you want to logout?",
       "logout",
       () => {
         signOut();
