@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { httpClient } from "../api/index"
-import { User } from "../models/index"
+import { httpClient } from "../api/"
+import { User } from "../models"
 import { ResponseError } from "../utils/Errors/ResponseError";
 import { QUERY_KEY } from "../constants/queryKeys";
 import * as tokenStore from "./token.store"

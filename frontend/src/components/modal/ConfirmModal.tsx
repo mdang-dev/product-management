@@ -1,7 +1,7 @@
 import { useModal } from "../../hooks/useModal";
 import "../../styles/ConfirmModal.scss";
 
-export function ConfirmModal() {
+function ConfirmModal() {
   const { isOpen, title, message, onConfirm, closeModal, type } = useModal();
 
   if (!isOpen) return null;
@@ -31,3 +31,5 @@ export function ConfirmModal() {
     </div>
   );
 }
+
+export default ConfirmModal;

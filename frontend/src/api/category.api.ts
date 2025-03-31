@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { Category } from "../models/category.model";
-import {httpClient} from "./index"
+import {httpClient} from "../api"
 import { ResponseError } from "../utils/Errors/ResponseError";
 
 const API_URL = "/api/categories";

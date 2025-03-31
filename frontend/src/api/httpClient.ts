@@ -6,8 +6,6 @@ class HttpClient {
 
     private static instance: HttpClient;
     private api: AxiosInstance;
-    private isRefreshing = false;
-    private refreshSubscribers: ((token: string) => void)[] = [];
     private readonly BASE_URL = process.env.url || "";
 
     private constructor() {

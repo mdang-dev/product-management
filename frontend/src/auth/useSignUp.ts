@@ -1,5 +1,5 @@
-import { AxiosPromise, AxiosResponse } from "axios";
-import { httpClient } from "../api/index";
+import {AxiosResponse } from "axios";
+import { httpClient } from "../api";
 import { UseMutateFunction, useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";

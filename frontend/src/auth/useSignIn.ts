@@ -1,5 +1,5 @@
 import { UseMutateFunction, useMutation, useQueryClient } from "@tanstack/react-query";
-import { httpClient } from "../api/index"
+import { httpClient } from "../api"
 import { QUERY_KEY } from "../constants/queryKeys";
 import { ResponseError } from "../utils/Errors/ResponseError";
 import { queryClient } from "../react-query/client";
