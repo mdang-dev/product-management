@@ -18,28 +18,19 @@ export const routes = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
-    errorElement: <NotFound />,
     children: [{ index: true, element: <HomePage /> }],
   },
-
   {
     path: "/auth",
+    element: <ProtectedRouteAuth />,
     children: [
       {
         path: "sign-in",
-        element: (
-          <ProtectedRouteAuth>
-            <LoginPage />
-          </ProtectedRouteAuth>
-        ),
+        element: <LoginPage />,
       },
       {
         path: "sign-up",
-        element: (
-          <ProtectedRouteAuth>
-            <SignUpPage />
-          </ProtectedRouteAuth>
-        ),
+        element: <SignUpPage />,
       },
     ],
   },
@@ -67,4 +58,5 @@ export const routes = createBrowserRouter([
       },
     ],
   },
+  { path: "*", element: <NotFound /> },
 ]);

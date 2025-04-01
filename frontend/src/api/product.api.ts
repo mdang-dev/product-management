@@ -1,42 +1,30 @@
 import {httpClient} from "./index"
 import { Product } from "../models"
-import { ResponseError } from "../utils/Errors/ResponseError"
 import { AxiosResponse } from "axios"
+import { API_KEY } from "../constants/apiKeys"
 
-const API_URL = "/api/products"
 
 export const fetchProducts = async (): Promise<Product[]> => {
-    const response = await httpClient.get<Product[]>(API_URL);
-    checkResponse(response)
+    const response = await httpClient.get<Product[]>(API_KEY.products);
     return response.data;
 }
 
 export const fetchProductsPublic = async (): Promise<Product[]> => {
-    const response = await httpClient.get<Product[]>("/api/public/products");
-    checkResponse(response);
+    const response = await httpClient.get<Product[]>(API_KEY.public.products);
     return response.data;
 }
 
 export const createProduct = async (data: FormData): Promise<AxiosResponse> => {
-   const response = await httpClient.post(API_URL, data); 
-   checkResponse(response);
+   const response = await httpClient.post(API_KEY.products, data); 
    return response;
 }
 
 export const updateProduct  = async (data: FormData): Promise<AxiosResponse> => {
-    const response  = await httpClient.put(API_URL, data);
-    checkResponse(response);
+    const response  = await httpClient.put(API_KEY.products, data);
     return response;
 }
 
 export const deleteProduct = async (id: string): Promise<AxiosResponse> => {
-    const response = await httpClient.delete(`${API_URL}/${id}`);
-    checkResponse(response);
+    const response = await httpClient.delete(`${API_KEY.products}/${id}`);
     return response;
-}
-
-const checkResponse = (response: AxiosResponse) => {
-    if(response.status > 201){
-        throw new ResponseError('Fail on api products request', response);
-    }
 }

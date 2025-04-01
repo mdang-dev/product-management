@@ -6,6 +6,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useSignIn } from "../../auth/useSignIn";
+import { useUser } from "../../auth/useUser";
 
 interface FormData {
   username: string;
@@ -29,16 +30,24 @@ const LoginPage: React.FC = () => {
     resolver: yupResolver(schema),
   });
 
-  const signIn = useSignIn();
+  const { signIn, isSuccess, isError } = useSignIn();
+  const { user } = useUser();
 
   const handleLogin: SubmitHandler<FormData> = async (data) => {
-    setIsLoading(true);
-    try {
-      signIn(data);
-    } catch (error) {
-      toast.error("Invalid username or password.");
-    } finally {
-      setIsLoading(false);
+    signIn(data);
+
+    if (isError) {
+      toast.error("Invalid username or password !");
+    }
+
+    if (isSuccess) {
+      setTimeout(() => {
+        navigate(
+          user?.roles.some((role) => role.name === "ADMIN")
+            ? "/admin/products/list"
+            : "/"
+        );
+      }, 10000);
     }
   };
 

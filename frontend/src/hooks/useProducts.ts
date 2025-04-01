@@ -1,11 +1,12 @@
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { QUERY_KEY } from "../constants/queryKeys"
 import { Product } from "../models/index";
 import {fetchProducts, updateProduct, deleteProduct, createProduct} from "../api/index"
-import { queryClient } from "../react-query/client";
 import { toast } from "react-toastify";
 
 export const useProducts = () => {
+
+  const queryClient = useQueryClient();  
 
  const fetch = useQuery<Product[]>({
         queryKey: [QUERY_KEY.products],

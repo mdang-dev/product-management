@@ -1,41 +1,20 @@
-import { useQuery } from "@tanstack/react-query";
-import { httpClient } from "../api/"
-import { User } from "../models"
-import { ResponseError } from "../utils/Errors/ResponseError";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { User } from "../models";
+import { getUser } from "../api/user.api";
 import { QUERY_KEY } from "../constants/queryKeys";
-import * as tokenStore from "./token.store"
-import * as userLocalStore from "./user.localstore"
-import { useEffect } from "react";
+import * as tokenStore from "../auth/token.store"
 
-export async function getUser(): Promise<User | null> {
-    const response = await httpClient.get<User>('/api/users/my-info');
-    if(response.status > 201){
-        throw new ResponseError('Fail on get user request', response);
-    }
-    return response.data;
-}
+export function useUser() {
 
-type IUseUser = {
-    user: User | null;
-}
+    const queryClient = useQueryClient();
+    const cachedUser = queryClient.getQueryData<User | undefined>([QUERY_KEY.user]);
+    const token = tokenStore.getToken();
+    const {data: user} = useQuery({
+        queryKey: [QUERY_KEY.user], 
+        queryFn: getUser,
+        enabled: !!token,
+        initialData: cachedUser
+    })
 
-export function useUser(): IUseUser {
-   const {data: user} = useQuery<User | null>({
-    queryKey: [QUERY_KEY.user],
-    queryFn: getUser,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    initialData: userLocalStore.getUser,
-    enabled: !!tokenStore.getToken
-})
-
-useEffect(() => {
-    if(!user) userLocalStore.removeUser();
-    else userLocalStore.saveUser(user);
-}, [user])
-
-return {
-    user: user ?? null
- }
+    return { user };
 }

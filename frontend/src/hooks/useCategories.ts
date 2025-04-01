@@ -1,19 +1,16 @@
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { QUERY_KEY } from "../constants/queryKeys"
 import { fetchCategories, deleteCategory, updateCategory, createProduct, createCategory } from "../api/index"
 import { Category } from "../models/index"
-import { queryClient } from "../react-query/client"
 import { toast } from "react-toastify"
 
 export const useCategories = () => {
 
+    const queryClient = useQueryClient();
+
     const fetch = useQuery<Category[]>({
         queryKey: [QUERY_KEY.categories],
         queryFn: fetchCategories,
-        staleTime: 5 * 60 * 1000,
-        refetchOnMount: false,
-        refetchOnReconnect: true,
-        refetchOnWindowFocus: false
     });
 
     const {mutate: create} = useMutation({
