@@ -3,11 +3,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import "react-toastify/dist/ReactToastify.css";
 import "../../../styles/CategoriesFormPage.scss";
-import { useCategories } from "../../../hooks/useCategories";
+import { useFetchCategories, useSaveCategory } from "../../../hooks/useCategoriesQuery";
+import { toast } from "react-toastify";
 
 type FormCategory = {
   name: string;
-}
+};
 
 const schema = yup.object().shape({
   name: yup
@@ -17,7 +18,7 @@ const schema = yup.object().shape({
 });
 
 const CategoriesFormPage: React.FC = () => {
-  const { create } = useCategories();
+  const create = useSaveCategory();
 
   const {
     register,
@@ -29,8 +30,15 @@ const CategoriesFormPage: React.FC = () => {
   });
 
   const onSubmit = (data: FormCategory) => {
-    create(data);
-    reset();
+    create.mutate(data, {
+      onSuccess: () => {
+        toast.success("Category created successfully");
+        reset();
+      },
+      onError: () => {
+        toast.error("Failed to create category");
+      },
+    });
   };
 
   return (

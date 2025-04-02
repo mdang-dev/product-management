@@ -36,11 +36,7 @@ export const routes = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: (
-      <ProtectedRoute>
-        <AdminLayout />
-      </ProtectedRoute>
-    ),
+    element: <AdminLayout />,
     children: [
       {
         path: "categories",

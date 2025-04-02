@@ -4,8 +4,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import "../../../styles/ProductFormPage.scss";
-import { useCategories } from "../../../hooks/useCategories";
-import { useProducts } from "../../../hooks/useProducts";
+import { useFetchCategories } from "../../../hooks/useCategoriesQuery";
+import {useSavePorduct } from "../../../hooks/useProductsQuery";
 type ProductForm = {
   id?: string;
   name: string;
@@ -49,8 +49,8 @@ const schema = yup.object().shape({
 });
 
 const ProductFormPage = () => {
-  const { data: categories = [] } = useCategories();
-  const { create } = useProducts();
+  const { data: categories = [] } = useFetchCategories();
+  const create = useSavePorduct();
 
   const {
     register,
@@ -70,16 +70,26 @@ const ProductFormPage = () => {
       return;
     }
 
-    create({
-      id: data.id || "",
-      name: data.name,
-      description: data.description || "",
-      imageFile: data.imageFile,
-      category: selectedCategory,
-      quantity: data.quantity,
-      price: data.price,
-    });
-    setTimeout(() => reset(), 500);
+    create.mutate(
+      {
+        id: data.id || "",
+        name: data.name,
+        description: data.description || "",
+        imageFile: data.imageFile,
+        category: selectedCategory,
+        quantity: data.quantity,
+        price: data.price,
+      },
+      {
+        onSuccess: () => {
+          reset();
+          toast.success("Product added successfully!");
+        },
+        onError: () => {
+          toast.error("Failed to add product.");
+        },
+      }
+    );
   };
 
   return (

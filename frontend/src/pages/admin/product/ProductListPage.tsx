@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,12 +8,20 @@ import {
 import "../../../styles/ProductListPage.scss";
 import { Product } from "../../../models/product.model";
 import UpdateProductModal from "./UpdateProductModal";
-import { useProducts } from "../../../hooks/useProducts";
+import {
+  useFetchProducts,
+  useRemoveProduct,
+  useUpdateProduct,
+} from "../../../hooks/useProductsQuery";
 import { useModal } from "../../../hooks/useModal";
+import { toast } from "react-toastify";
 
 const ProductListPage = () => {
+
   const openModal = useModal((set) => set.openModal);
-  const { data: products = [], remove, update } = useProducts();
+  const { data: products = [] } = useFetchProducts();
+  const remove = useRemoveProduct();
+  const update = useUpdateProduct();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
@@ -35,13 +43,29 @@ const ProductListPage = () => {
         "Confirm Deletion",
         "Are you sure you want to delete this item?",
         "delete",
-        () => remove(product.id)
+        () =>
+          remove.mutate(product.id, {
+            onSuccess: () => {
+              toast.success("Product deleted successfully");
+            },
+            onError: () => {
+              toast.error("Failed to delete product");
+            },
+          })
       );
     }
   }, []);
 
   const handleUpdateSubmit = (data: Product) => {
-    update(data);
+    update.mutate(data, {
+      onSuccess: () => {
+        toast.success("Product updated successfully");
+        setSelectedProduct(null);
+      },
+      onError: () => {
+        toast.error("Failed to update product");
+      },
+    });
   };
 
   const columns = useMemo<ColumnDef<Product>[]>(

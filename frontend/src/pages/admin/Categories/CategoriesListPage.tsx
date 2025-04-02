@@ -8,14 +8,21 @@ import {
 import UpdateCategoryModal from "./UpdateCategoryModal";
 import { Category } from "../../../models/category.model";
 import "../../../styles/CategoriesListPage.scss";
-import { useCategories } from "../../../hooks/useCategories";
+import {
+  useFetchCategories,
+  useRemoveCategory,
+  useUpdateCategory,
+} from "../../../hooks/useCategoriesQuery";
 import { useModal } from "../../../hooks/useModal";
+import { toast } from "react-toastify";
 
 const CategoriesListPage = () => {
-
-  const { data: categories = [], update, remove } = useCategories();
-
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const { data: categories = [] } = useFetchCategories();
+  const update = useUpdateCategory();
+  const remove = useRemoveCategory();
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  );
 
   const openModal = useModal((set) => set.openModal);
 
@@ -35,13 +42,28 @@ const CategoriesListPage = () => {
         "Confirm Deletion",
         "Are you sure you want to delete this item?",
         "delete",
-        () => remove(category.id)
+        () =>
+          remove.mutate(category.id, {
+            onSuccess: () => {
+              toast.success("Category deleted successfully");
+            },
+            onError: () => {
+              toast.error("Failed to delete category");
+            },
+          })
       );
     }
   }, []);
 
   const handleUpdateCategory = (updatedCategory: Category) => {
-    update(updatedCategory);
+    update.mutate(updatedCategory, {
+      onSuccess: () => {
+        toast.success("Category updated successfully");
+      },
+      onError: () => {
+        toast.error("Failed to update category");
+      },
+    });
   };
 
   const columns = useMemo<ColumnDef<Category>[]>(
