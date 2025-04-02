@@ -20,6 +20,7 @@ import { useModal } from "../../../hooks/useModal";
 import { toast } from "react-toastify";
 
 const ProductListPage = () => {
+  
   const openModal = useModal((set) => set.openModal);
   const { data: products = [] } = useFetchProducts();
   const remove = useRemoveProduct();
