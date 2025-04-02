@@ -30,25 +30,22 @@ const LoginPage: React.FC = () => {
     resolver: yupResolver(schema),
   });
 
-  const { signIn, isSuccess, isError } = useSignIn();
+  const { mutate: signIn } = useSignIn();
   const { user } = useUser();
 
   const handleLogin: SubmitHandler<FormData> = async (data) => {
-    signIn(data);
-
-    if (isError) {
-      toast.error("Invalid username or password !");
-    }
-
-    if (isSuccess) {
-      setTimeout(() => {
+    signIn(data, {
+      onSuccess: () => {
         navigate(
           user?.roles.some((role) => role.name === "ADMIN")
             ? "/admin/products/list"
             : "/"
         );
-      }, 10000);
-    }
+      },
+      onError: () => {
+        toast.error("Invalid username or password !");
+      },
+    });
   };
 
   return (

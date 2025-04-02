@@ -1,14 +1,11 @@
-import { MutationFunction, useMutation, useQueryClient } from "@tanstack/react-query";
+import {QueryKey, useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function useCustomMutation<TData, TVariables = void>(
-  mutationFn: MutationFunction<TData, TVariables>,
-  queryKey: string
-) {
+export const useCustomMutation = <TArgs, TResult>(func: (args: TArgs) => Promise<TResult>, key: QueryKey) => {
   const queryClient = useQueryClient();
-  return useMutation<TData, Error, TVariables>({
-    mutationFn: async (variables: TVariables | undefined) => mutationFn(variables!), 
+  return useMutation({
+    mutationFn: func,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [queryKey] });
+      queryClient.invalidateQueries({queryKey: key, refetchType: "inactive"});
     },
   });
 }

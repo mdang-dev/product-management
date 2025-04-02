@@ -4,10 +4,13 @@ import {
   getCoreRowModel,
   flexRender,
   ColumnDef,
+  getSortedRowModel,
+  SortingState,
 } from "@tanstack/react-table";
 import "../../../styles/ProductListPage.scss";
 import { Product } from "../../../models/product.model";
 import UpdateProductModal from "./UpdateProductModal";
+import { ArrowUpDown } from "lucide-react";
 import {
   useFetchProducts,
   useRemoveProduct,
@@ -17,7 +20,6 @@ import { useModal } from "../../../hooks/useModal";
 import { toast } from "react-toastify";
 
 const ProductListPage = () => {
-
   const openModal = useModal((set) => set.openModal);
   const { data: products = [] } = useFetchProducts();
   const remove = useRemoveProduct();
@@ -70,12 +72,21 @@ const ProductListPage = () => {
 
   const columns = useMemo<ColumnDef<Product>[]>(
     () => [
-      { accessorKey: "id", header: "Product ID" },
-      { accessorKey: "name", header: "Product Name" },
-      { accessorKey: "description", header: "Description" },
+      { accessorKey: "id", header: "Product ID", enableSorting: false },
+      {
+        accessorKey: "name",
+        header: "Product Name",
+        sortingFn: "alphanumeric",
+      },
+      {
+        accessorKey: "description",
+        header: "Description",
+        enableSorting: false,
+      },
       {
         accessorKey: "imageUrl",
         header: "Image",
+        enableSorting: false,
         cell: ({ row }) => (
           <div className="image-preview-cell">
             <img
@@ -89,9 +100,10 @@ const ProductListPage = () => {
           </div>
         ),
       },
-      { accessorKey: "quantity", header: "Quantity" },
+      { accessorKey: "quantity", header: "Quantity", sortingFn: "basic" },
       {
         accessorKey: "price",
+        sortingFn: "basic",
         header: "Price",
         cell: (info) => `$${info.getValue()}`,
       },
@@ -119,10 +131,17 @@ const ProductListPage = () => {
     []
   );
 
+  const [sorting, setSorting] = useState<SortingState>([]);
+
   const table = useReactTable({
     data: filteredProducts,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
   });
 
   return (
@@ -146,11 +165,23 @@ const ProductListPage = () => {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
+                <th
+                  key={header.id}
+                  onClick={header.column.getToggleSortingHandler()}
+                >
+                  <div
+                    className={
+                      header.column.getCanSort() ? "column-header" : ""
+                    }
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                    {header.column.getCanSort() && (
+                      <ArrowUpDown size={20} color="white" />
+                    )}
+                  </div>
                 </th>
               ))}
             </tr>

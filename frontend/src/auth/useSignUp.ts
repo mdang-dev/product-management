@@ -1,20 +1,17 @@
 import {AxiosResponse } from "axios";
 import { httpClient } from "../api";
-import { UseMutateFunction, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { ResponseError } from "../utils/Errors/ResponseError";
 
 async function signUp(data: {username: string, password: string}): Promise<AxiosResponse> {
     const response = await httpClient.post('/api/auth/register', data);
     return response;
 }
 
-type IUseSignUp = UseMutateFunction<AxiosResponse, unknown, {username: string, password: string}, unknown>;
-
-export function useSignUp(): IUseSignUp {
+export function useSignUp() {
     const navigate = useNavigate();
-    const {mutate: signUpMutation} = useMutation({
+    return useMutation({
         mutationFn: signUp,
         onSuccess: () => {
             toast.success('Register successfully !');
@@ -24,6 +21,4 @@ export function useSignUp(): IUseSignUp {
             toast.error("Username or password already exists !");
         }
     });
-
-    return signUpMutation;
 }

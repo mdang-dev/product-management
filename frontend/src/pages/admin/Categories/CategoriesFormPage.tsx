@@ -3,8 +3,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import "react-toastify/dist/ReactToastify.css";
 import "../../../styles/CategoriesFormPage.scss";
-import { useFetchCategories, useSaveCategory } from "../../../hooks/useCategoriesQuery";
+import {
+  useFetchCategories,
+  useSaveCategory,
+} from "../../../hooks/useCategoriesQuery";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
+import { QUERY_KEY } from "../../../constants/queryKeys";
 
 type FormCategory = {
   name: string;
@@ -18,6 +23,8 @@ const schema = yup.object().shape({
 });
 
 const CategoriesFormPage: React.FC = () => {
+  const queryClient = useQueryClient();
+
   const create = useSaveCategory();
 
   const {

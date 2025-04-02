@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { QUERY_KEY } from "../constants/queryKeys"
 import { Product } from "../models/index";
 import {fetchProducts, updateProduct, deleteProduct, createProduct} from "../api/index"
@@ -32,7 +32,7 @@ export const useSavePorduct = () => {
 
       await createProduct(formData);
     },
-    QUERY_KEY.products
+    [QUERY_KEY.products]
    );
 };
 
@@ -57,7 +57,7 @@ export const useUpdateProduct = () => {
 
        await updateProduct(formData);
       },
-      QUERY_KEY.products
+      [QUERY_KEY.products]
      );
 }
 
@@ -65,6 +65,6 @@ export const useUpdateProduct = () => {
 export const useRemoveProduct = () => {
   return useCustomMutation(
     async (id: string) => await deleteProduct(id),
-    QUERY_KEY.products
+    [QUERY_KEY.products]
   );
 }

@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import "../../../styles/ProductFormPage.scss";
 import { useFetchCategories } from "../../../hooks/useCategoriesQuery";
-import {useSavePorduct } from "../../../hooks/useProductsQuery";
+import { useSavePorduct } from "../../../hooks/useProductsQuery";
 type ProductForm = {
   id?: string;
   name: string;
@@ -25,7 +25,7 @@ const schema = yup.object().shape({
     .test("fileType", "Unsupported file format", (value) =>
       value && value.length > 0
         ? ["image/jpeg", "image/png", "image/gif"].includes(value[0].type)
-        : false
+        : true
     )
     .required("Images are required"),
   category: yup.object({
@@ -51,15 +51,33 @@ const schema = yup.object().shape({
 const ProductFormPage = () => {
   const { data: categories = [] } = useFetchCategories();
   const create = useSavePorduct();
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors },
   } = useForm<ProductForm>({
     resolver: yupResolver(schema),
   });
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const removeImage = () => {
+    if (inputRef.current && imagePreview) {
+      setImagePreview(null);
+      inputRef.current.value = "";
+      reset({ ...getValues(), imageFile: undefined });
+    }
+  };
 
   const onSubmit = async (data: ProductForm) => {
     const selectedCategory = categories.find(
@@ -107,8 +125,18 @@ const ProductFormPage = () => {
           <input
             type="file"
             {...register("imageFile")}
+            onChange={handleFileChange}
             className="file-input"
+            ref={inputRef}
           />
+          {imagePreview && (
+            <div className="image-preview">
+              <img src={imagePreview} alt="Preview" />
+              <button type="button" className="remove" onClick={removeImage}>
+                ✕
+              </button>
+            </div>
+          )}
         </div>
         <p className="error">{errors.imageFile?.message}</p>
         <label>Category</label>

@@ -17,7 +17,7 @@ export function useSignIn() {
 
     const queryClient = useQueryClient();
 
-    const signInMutation = useMutation<AuthResponse, unknown, { username: string, password: string }, unknown>(
+    return useMutation(
         {
             mutationFn: signIn,
             onSuccess: async (data) => {
@@ -29,7 +29,5 @@ export function useSignIn() {
                 },
         },
     );
-
-    return {signIn: signInMutation.mutate, ...signInMutation}
      
 }
