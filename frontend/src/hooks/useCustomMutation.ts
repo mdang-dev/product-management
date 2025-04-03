@@ -5,7 +5,10 @@ export const useCustomMutation = <TArgs, TResult>(func: (args: TArgs) => Promise
   return useMutation({
     mutationFn: func,
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: key, refetchType: "inactive"});
+      queryClient.invalidateQueries({queryKey: key});
     },
+    onError: (error) => {
+      process.env.NODE_ENV !== "production" && console.error(error);
+    }
   });
 }

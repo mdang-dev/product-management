@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import "../../../styles/ProductFormPage.scss";
 import { useFetchCategories } from "../../../hooks/useCategoriesQuery";
 import { useSavePorduct } from "../../../hooks/useProductsQuery";
+
 type ProductForm = {
   id?: string;
   name: string;
@@ -59,15 +60,17 @@ const ProductFormPage = () => {
     handleSubmit,
     reset,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm<ProductForm>({
     resolver: yupResolver(schema),
   });
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+    const file = event.target.files;
     if (file) {
-      setImagePreview(URL.createObjectURL(file));
+      setValue("imageFile", file);
+      setImagePreview(URL.createObjectURL(file?.[0]));
     }
   };
 
@@ -83,10 +86,6 @@ const ProductFormPage = () => {
     const selectedCategory = categories.find(
       (cat) => cat.id === data.category.id
     );
-    if (!selectedCategory) {
-      toast.error("Invalid category selected.");
-      return;
-    }
 
     create.mutate(
       {
@@ -101,6 +100,7 @@ const ProductFormPage = () => {
       {
         onSuccess: () => {
           reset();
+          setImagePreview(null);
           toast.success("Product added successfully!");
         },
         onError: () => {

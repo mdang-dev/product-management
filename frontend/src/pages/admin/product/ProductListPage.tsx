@@ -20,7 +20,6 @@ import { useModal } from "../../../hooks/useModal";
 import { toast } from "react-toastify";
 
 const ProductListPage = () => {
-  
   const openModal = useModal((set) => set.openModal);
   const { data: products = [] } = useFetchProducts();
   const remove = useRemoveProduct();
@@ -161,45 +160,47 @@ const ProductListPage = () => {
           className="search-input"
         />
       </div>
-      <table className="product-table">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  onClick={header.column.getToggleSortingHandler()}
-                >
-                  <div
-                    className={
-                      header.column.getCanSort() ? "column-header" : ""
-                    }
+      <div className="table-wrapper">
+        <table className="product-table">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    onClick={header.column.getToggleSortingHandler()}
                   >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                    {header.column.getCanSort() && (
-                      <ArrowUpDown size={20} color="white" />
-                    )}
-                  </div>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                    <div
+                      className={
+                        header.column.getCanSort() ? "column-header" : ""
+                      }
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                      {header.column.getCanSort() && (
+                        <ArrowUpDown size={20} color="white" />
+                      )}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {selectedProduct && (
         <UpdateProductModal

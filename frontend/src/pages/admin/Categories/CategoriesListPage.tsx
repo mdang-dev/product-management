@@ -20,9 +20,7 @@ const CategoriesListPage = () => {
   const { data: categories = [] } = useFetchCategories();
   const update = useUpdateCategory();
   const remove = useRemoveCategory();
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
-  );
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
   const openModal = useModal((set) => set.openModal);
 
@@ -55,7 +53,7 @@ const CategoriesListPage = () => {
     }
   }, []);
 
-  const handleUpdateCategory = (updatedCategory: Category) => {
+  const handleUpdateCategory = useCallback((updatedCategory: Category) => {
     update.mutate(updatedCategory, {
       onSuccess: () => {
         toast.success("Category updated successfully");
@@ -64,7 +62,7 @@ const CategoriesListPage = () => {
         toast.error("Failed to update category");
       },
     });
-  };
+  }, []);
 
   const columns = useMemo<ColumnDef<Category>[]>(
     () => [

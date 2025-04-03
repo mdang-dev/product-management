@@ -23,8 +23,6 @@ const schema = yup.object().shape({
 });
 
 const CategoriesFormPage: React.FC = () => {
-  const queryClient = useQueryClient();
-
   const create = useSaveCategory();
 
   const {
