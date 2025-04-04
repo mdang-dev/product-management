@@ -36,11 +36,13 @@ const LoginPage: React.FC = () => {
   const handleLogin: SubmitHandler<FormData> = async (data) => {
     signIn(data, {
       onSuccess: () => {
-        navigate(
-          user?.roles.some((role) => role.name === "ADMIN")
-            ? "/admin/products/list"
-            : "/"
-        );
+        setTimeout(() => {
+          navigate(
+            user?.roles.some((role) => role.name === "ADMIN")
+              ? "/admin/products/list"
+              : "/"
+          );
+        }, 2000);
       },
       onError: () => {
         toast.error("Invalid username or password !");

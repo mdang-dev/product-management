@@ -1,3 +1,5 @@
+import { signOut } from "../api/user.api";
+
 export const API_KEY =  {
     user: '/api/users/my-info',
     products: '/api/products',
@@ -8,5 +10,6 @@ export const API_KEY =  {
     auth: {
         signIn: '/api/auth/login',
         signUp: '/api/auth/register',
+        signOut: '/users/logout'
     }
 }

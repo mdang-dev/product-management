@@ -1,13 +1,7 @@
-import {AxiosResponse } from "axios";
-import { httpClient } from "../api";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
-async function signUp(data: {username: string, password: string}): Promise<AxiosResponse> {
-    const response = await httpClient.post('/api/auth/register', data);
-    return response;
-}
+import { signUp } from "../api/user.api";
 
 export function useSignUp() {
     const navigate = useNavigate();
