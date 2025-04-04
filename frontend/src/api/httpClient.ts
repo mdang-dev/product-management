@@ -24,7 +24,7 @@ class HttpClient {
         );
 
         this.api.interceptors.response.use(
-            (response: AxiosResponse) => {
+            (response) => {
                 return response
             }, 
             err => Promise.reject(err)

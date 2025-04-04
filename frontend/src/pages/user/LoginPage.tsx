@@ -5,8 +5,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useSignIn } from "../../auth/useSignIn";
-import { useUser } from "../../auth/useUser";
+import { useSignIn, useUser } from "../../auth/useAuth";
 
 interface FormData {
   username: string;
@@ -31,19 +30,9 @@ const LoginPage: React.FC = () => {
   });
 
   const { mutate: signIn } = useSignIn();
-  const { user } = useUser();
 
   const handleLogin: SubmitHandler<FormData> = async (data) => {
     signIn(data, {
-      onSuccess: () => {
-        setTimeout(() => {
-          navigate(
-            user?.roles.some((role) => role.name === "ADMIN")
-              ? "/admin/products/list"
-              : "/"
-          );
-        }, 2000);
-      },
       onError: () => {
         toast.error("Invalid username or password !");
       },

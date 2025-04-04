@@ -15,7 +15,7 @@ export const signIn = async (data: { username: string; password: string }): Prom
 
 export const signUp = async (data: { username: string; password: string }): Promise<AxiosResponse> => {
     const response = await httpClient.post<AxiosResponse>(API_KEY.auth.signUp, data);
-    return response;
+    return response.data;
 }
 
 export const signOut = async (): Promise<AxiosResponse> => {

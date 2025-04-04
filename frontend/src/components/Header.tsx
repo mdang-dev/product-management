@@ -11,8 +11,8 @@ import {
   X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../auth/useUser";
-import { useSignOut } from "../auth/useSignOut";
+import { useUser } from "../auth/useAuth";
+import { useSignOut } from "../auth/useAuth";
 import { useModal } from "../hooks/useModal";
 
 

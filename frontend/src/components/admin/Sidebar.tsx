@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AlignJustify, Tag, Box, CornerRightUp, LogOut } from "lucide-react";
 import "../../styles/Sidebar.scss";
 import { useModal } from "../../hooks/useModal";
-import { useSignOut } from "../../auth/useSignOut";
+import { useSignOut } from "../../auth/useAuth";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);

@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/RegisterPage.scss";
 import { toast, ToastContainer } from "react-toastify";
-import { httpClient } from "../../api/index";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useSignUp } from "../../auth/useSignUp";
+import { useSignUp } from "../../auth/useAuth";
 
 interface FormData {
   username: string;
@@ -40,10 +39,17 @@ const RegisterPage: React.FC = () => {
   });
 
   const handleRegister: SubmitHandler<FormData> = async (data) => {
-    const { username, password } = data;
     setIsLoading(true);
     try {
-      signUp({ username, password });
+      signUp.mutate(data, {
+        onSuccess: () => {
+          toast.success("Register successfully !");
+          navigate("/auth/sign-in");
+        },
+        onError: () => {
+          toast.error("Username or password already exists !");
+        },
+      });
     } finally {
       setIsLoading(false);
     }

@@ -59,6 +59,7 @@ const ProductFormPage = () => {
     register,
     handleSubmit,
     reset,
+    trigger,
     getValues,
     setValue,
     formState: { errors },
@@ -70,6 +71,7 @@ const ProductFormPage = () => {
     const file = event.target.files;
     if (file) {
       setValue("imageFile", file);
+      trigger("imageFile");
       setImagePreview(URL.createObjectURL(file?.[0]));
     }
   };
@@ -79,6 +81,7 @@ const ProductFormPage = () => {
       setImagePreview(null);
       inputRef.current.value = "";
       reset({ ...getValues(), imageFile: undefined });
+      trigger("imageFile");
     }
   };
 
