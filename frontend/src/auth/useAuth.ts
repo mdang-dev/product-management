@@ -39,7 +39,7 @@ export function useSignOut() {
     const queryClient = useQueryClient();
     const onSignOut = useCallback(() => {
         tokenStore.clearToken();
-        queryClient.removeQueries({queryKey: [QUERY_KEY.user]});
+        queryClient.removeQueries({queryKey: [QUERY_KEY.user], exact: true});
     }, [navigate, queryClient]);
 
     return onSignOut;

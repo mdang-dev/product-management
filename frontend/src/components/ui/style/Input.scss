@@ -1,0 +1,40 @@
+@use "sass:color";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+
+$primary-color: #1e88e5;
+$error-color: #ff0000;
+$background-color: #f4f4f9;
+$form-bg: #ffffff;
+$border-color: #d1d5db;
+
+.input-group {
+    text-align: left;
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid $border-color;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: 0.3s;
+
+      &:focus {
+        border-color: $primary-color;
+        outline: none;
+        box-shadow: 0 0 5px rgba(30, 136, 229, 0.5);
+      }
+    }
+  }
+
+  .error-message {
+    color: $error-color;
+    font-size: 12px;
+    margin-top: 5px;
+  }

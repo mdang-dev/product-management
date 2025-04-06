@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { QUERY_KEY } from "../constants/queryKeys"
-import { fetchCategories, deleteCategory, updateCategory, createProduct, createCategory } from "../api/index"
+import { fetchCategories, deleteCategory, updateCategory, createCategory } from "../api/index"
 import { Category } from "../models/index"
 import { useCustomMutation } from "./useCustomMutation"
 

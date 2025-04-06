@@ -18,6 +18,7 @@ import {
 } from "../../../hooks/useProductsQuery";
 import { useModal } from "../../../hooks/useModal";
 import { toast } from "react-toastify";
+import { GlobalTable } from "../../../components/table/GlobalTable";
 
 const ProductListPage = () => {
   const openModal = useModal((set) => set.openModal);
@@ -107,42 +108,29 @@ const ProductListPage = () => {
         header: "Price",
         cell: (info) => `$${info.getValue()}`,
       },
-      {
-        id: "actions",
-        header: "Actions",
-        cell: ({ row }) => (
-          <div className="actions">
-            <button
-              className="edit-btn"
-              onClick={() => handleUpdateClick(row.original)}
-            >
-              Edit
-            </button>
-            <button
-              className="delete-btn"
-              onClick={() => handleDeleteClick(row.original)}
-            >
-              Delete
-            </button>
-          </div>
-        ),
-      },
+      // {
+      //   id: "actions",
+      //   header: "Actions",
+      //   cell: ({ row }) => (
+      //     <div className="actions">
+      //       <button
+      //         className="edit-btn"
+      //         onClick={() => handleUpdateClick(row.original)}
+      //       >
+      //         Edit
+      //       </button>
+      //       <button
+      //         className="delete-btn"
+      //         onClick={() => handleDeleteClick(row.original)}
+      //       >
+      //         Delete
+      //       </button>
+      //     </div>
+      //   ),
+      // },
     ],
     []
   );
-
-  const [sorting, setSorting] = useState<SortingState>([]);
-
-  const table = useReactTable({
-    data: filteredProducts,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    state: {
-      sorting,
-    },
-    onSortingChange: setSorting,
-  });
 
   return (
     <div className="product-table-container">
@@ -160,47 +148,13 @@ const ProductListPage = () => {
           className="search-input"
         />
       </div>
-      <div className="table-wrapper">
-        <table className="product-table">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    onClick={header.column.getToggleSortingHandler()}
-                  >
-                    <div
-                      className={
-                        header.column.getCanSort() ? "column-header" : ""
-                      }
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                      {header.column.getCanSort() && (
-                        <ArrowUpDown size={20} color="white" />
-                      )}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      
+      <GlobalTable
+        columns={columns}
+        data={filteredProducts}
+        handleDeleteClick={handleDeleteClick}
+        handleUpdateClick={handleUpdateClick}
+      />
 
       {selectedProduct && (
         <UpdateProductModal

@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,6 +10,7 @@ import {
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEY } from "../../../constants/queryKeys";
+import { Input } from "../../../components/ui/Input";
 
 type FormCategory = {
   name: string;
@@ -50,20 +51,12 @@ const CategoriesFormPage: React.FC = () => {
     <div className="categories-container">
       <div className="form-wrapper">
         <h2>Create Category</h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="input-group">
-            <label>Name</label>
-            <input
-              type="text"
-              {...register("name")}
-              placeholder="Enter category name"
-            />
-            {errors.name && (
-              <p className="error-message">{errors.name.message}</p>
-            )}
-          </div>
-          <button type="submit">Submit</button>
-        </form>
+        <FormProvider {...errors}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Input name="name" label="Category Name" />
+            <button type="submit">Submit</button>
+          </form>
+        </FormProvider>
       </div>
     </div>
   );
