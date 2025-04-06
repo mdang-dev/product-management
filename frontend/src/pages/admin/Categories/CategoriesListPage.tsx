@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -15,12 +15,20 @@ import {
 } from "../../../hooks/useCategoriesQuery";
 import { useModal } from "../../../hooks/useModal";
 import { toast } from "react-toastify";
+import { GlobalTable } from "../../../components/table/GlobalTable";
 
 const CategoriesListPage = () => {
   const { data: categories = [] } = useFetchCategories();
   const update = useUpdateCategory();
   const remove = useRemoveCategory();
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  );
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setIsLoading(false), 10000);
+  }, []);
 
   const openModal = useModal((set) => set.openModal);
 
@@ -69,44 +77,16 @@ const CategoriesListPage = () => {
       {
         accessorKey: "id",
         header: "ID",
+        enableSorting: false,
       },
       {
         accessorKey: "name",
         header: "Category Name",
-      },
-      {
-        id: "actions",
-        header: "Actions",
-        cell: ({ row }) => (
-          <div className="action-buttons">
-            <button
-              onClick={() => {
-                setSelectedCategory(row.original);
-              }}
-              className="update-btn"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => {
-                handleDeleteClick(row.original);
-              }}
-              className="delete-btn"
-            >
-              Delete
-            </button>
-          </div>
-        ),
+        sortingFn: "alphanumeric",
       },
     ],
     []
   );
-
-  const table = useReactTable({
-    data: filteredCategories,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
 
   return (
     <div className="categories-list-container">
@@ -124,36 +104,13 @@ const CategoriesListPage = () => {
           className="search-input"
         />
       </div>
-      <table
-        className="categories-table"
-        style={{ borderRadius: "8px", fontFamily: "Arial, sans-serif" }}
-      >
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <GlobalTable
+        data={filteredCategories}
+        columns={columns}
+        loading={isLoading}
+        handleDeleteClick={handleDeleteClick}
+        handleUpdateClick={setSelectedCategory}
+      />
       {selectedCategory && (
         <UpdateCategoryModal
           category={selectedCategory}

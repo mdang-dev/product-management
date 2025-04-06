@@ -1,6 +1,6 @@
 import React from "react";
-import "../styles/ProductCard.scss";
-import { Product } from "../models/product.model";
+import "../../styles/ProductCard.scss";
+import { Product } from "../../models/product.model";
 
 const ProductCard: React.FC<Product> = ({
   name,

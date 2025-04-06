@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import "./styles/Global.scss";
+import "react-loading-skeleton/dist/skeleton.css";
 import { RouterProvider } from "react-router-dom";
 import { routes } from "./routers/routes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

@@ -5,21 +5,26 @@ import {
   UseFormRegisterReturn,
 } from "react-hook-form";
 import "./style/Input.scss";
+import { Ref } from "react";
 
 type InputProps = {
-  lable?: string;
+  label?: string;
   placeholder?: string;
   type?: "email" | "password" | "text" | "number" | "file";
   className?: string;
   name?: string;
+  ref?: Ref<HTMLInputElement>;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export function Input({
-  lable,
+  label,
   placeholder,
   type = "text",
   className,
   name,
+  ref,
+  onChange,
 }: InputProps) {
   const {
     control,
@@ -28,7 +33,7 @@ export function Input({
 
   return (
     <div className="input-group">
-      <label htmlFor={name}>{lable}</label>
+      <label htmlFor={name}>{label}</label>
       <Controller
         name={name!}
         control={control}
@@ -38,6 +43,8 @@ export function Input({
             type={type}
             placeholder={placeholder}
             className={className}
+            ref={ref}
+            onChange={onChange}
           />
         )}
       />

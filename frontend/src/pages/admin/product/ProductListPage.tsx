@@ -1,12 +1,5 @@
-import { useState, useMemo, useCallback } from "react";
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-  ColumnDef,
-  getSortedRowModel,
-  SortingState,
-} from "@tanstack/react-table";
+import { useState, useMemo, useCallback, useEffect } from "react";
+import { ColumnDef } from "@tanstack/react-table";
 import "../../../styles/ProductListPage.scss";
 import { Product } from "../../../models/product.model";
 import UpdateProductModal from "./UpdateProductModal";
@@ -27,6 +20,13 @@ const ProductListPage = () => {
   const update = useUpdateProduct();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isLoading, setIdLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIdLoading(false);
+    }, 10000);
+  }, []);
 
   const filteredProducts = useMemo(
     () =>
@@ -108,26 +108,6 @@ const ProductListPage = () => {
         header: "Price",
         cell: (info) => `$${info.getValue()}`,
       },
-      // {
-      //   id: "actions",
-      //   header: "Actions",
-      //   cell: ({ row }) => (
-      //     <div className="actions">
-      //       <button
-      //         className="edit-btn"
-      //         onClick={() => handleUpdateClick(row.original)}
-      //       >
-      //         Edit
-      //       </button>
-      //       <button
-      //         className="delete-btn"
-      //         onClick={() => handleDeleteClick(row.original)}
-      //       >
-      //         Delete
-      //       </button>
-      //     </div>
-      //   ),
-      // },
     ],
     []
   );
@@ -148,10 +128,11 @@ const ProductListPage = () => {
           className="search-input"
         />
       </div>
-      
+
       <GlobalTable
         columns={columns}
         data={filteredProducts}
+        loading={isLoading}
         handleDeleteClick={handleDeleteClick}
         handleUpdateClick={handleUpdateClick}
       />

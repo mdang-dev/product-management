@@ -9,15 +9,16 @@ import {
 import { useState } from "react";
 import "../../styles/ProductListPage.scss";
 import { ArrowUpDown } from "lucide-react";
+import Skeleton from "react-loading-skeleton";
 
-type GobalTableProps<T> =  {
+type GobalTableProps<T> = {
   data: T[];
   columns: ColumnDef<T, any>[];
   loading?: boolean;
   pagination?: number;
   handleUpdateClick?: (item: T) => void;
   handleDeleteClick?: (item: T) => void;
-}
+};
 
 export function GlobalTable<T>({
   data,
@@ -28,6 +29,7 @@ export function GlobalTable<T>({
   handleDeleteClick,
 }: GobalTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const skeletonRows = Array(5).fill(null);
   const {
     getHeaderGroups,
     getRowModel,
@@ -80,31 +82,48 @@ export function GlobalTable<T>({
           ))}
         </thead>
         <tbody>
-          {getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
+          {loading
+            ? skeletonRows.map((_, index) => (
+                <tr key={`skeleton-${index}`}>
+                  {columns.map((_, colIndex) => (
+                    <td key={`col-${colIndex}`}>
+                      <Skeleton height={20} />
+                    </td>
+                  ))}
+                  <td className="actions">
+                    <Skeleton width={60} height={30} />
+                    <Skeleton width={60} height={30} />
+                  </td>
+                </tr>
+              ))
+            : getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                  <td>
+                    <div className="actions">
+                      <button
+                        className="edit-btn"
+                        onClick={() => handleUpdateClick!(row.original)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="delete-btn"
+                        onClick={() => handleDeleteClick!(row.original)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
               ))}
-              <td>
-                <div className="actions">
-                  <button
-                    className="edit-btn"
-                    onClick={() => handleUpdateClick!(row.original)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleDeleteClick!(row.original)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
         </tbody>
       </table>
     </div>
