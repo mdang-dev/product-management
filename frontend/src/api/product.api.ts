@@ -5,8 +5,8 @@ import { API_KEY } from "../constants/apiKeys"
 
 
 export const fetchProducts = async (): Promise<Product[]> => {
-    const response = await httpClient.get<Product[]>(API_KEY.products);
-    return response.data;
+    const response = await httpClient<Product[]>(API_KEY.products);
+    return response.data
 }
 
 export const fetchProductsPublic = async (): Promise<Product[]> => {

@@ -1,52 +1,47 @@
-import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import * as tokenStore from "../auth/token.store";
 
 class HttpClient {
 
-    private api: AxiosInstance;
-    private _BASE_URL = process.env.url || "";
+    private _baseUrl: string = process.env.url || "";
+    private _instance: AxiosInstance;
+    private _configs: AxiosRequestConfig = {
+        baseURL: this._baseUrl,
+        timeout: 10000,
+    }
 
-    constructor() {
+    public get instace() {
+        return this._instance;
+    }
 
-        this.api = axios.create({
-            baseURL: this._BASE_URL,
-            timeout: 10000,
+    constructor () {
+
+        this._instance = axios.create(this._configs);
+
+        this._instance.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
+            const token = tokenStore.getToken();
+            if(token){
+                config.headers.Authorization = `Bearer ${token}`;
+            }   
+            return config;
+        },
+        (errr: AxiosError) => {
+            return Promise.reject(errr);
         });
 
-        this.api.interceptors.request.use(async config => {
-            const token = tokenStore.getToken();
-            if(token) {
-                config.headers.Authorization = `Bearer ${token}`;
-            }
-            return config;
-          }, 
-         err => Promise.reject(err)
+        this._instance.interceptors.response.use(
+            (response: AxiosResponse) => {
+              return response;
+              },
+              (error: AxiosError) => {
+                return Promise.reject(error);
+              }
         );
 
-        this.api.interceptors.response.use(
-            (response) => {
-                return response
-            }, 
-            err => Promise.reject(err)
-        );
-    }
-
-    public get<T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-        return this.api.get(url, config);
-    }
-
-    public post<T, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-        return this.api.post(url, data, config);
-    }
-
-    public put<T, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>{
-        return this.api.put(url, data, config);
-    }
-
-    public delete<T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>{
-        return this.api.delete(url, config);
-    }
+     }
 }
 
+export const httpClient = new HttpClient().instace;
 
-export const httpClient = new HttpClient();
+
+

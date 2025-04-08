@@ -2,7 +2,6 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getSortedRowModel,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -46,9 +45,10 @@ export function GlobalTable<T>({
     state: { sorting },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    manualSorting: true,
     pageCount: Math.ceil(data.length / pagination! || 10),
     manualPagination: false,
+    enableSorting: false
   });
 
   return (
