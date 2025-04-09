@@ -78,6 +78,7 @@ const ProductListPage = () => {
         accessorKey: "name",
         header: "Product Name",
         sortingFn: "alphanumeric",
+        filterFn: "includesString",
       },
       {
         accessorKey: "description",

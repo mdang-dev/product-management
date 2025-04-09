@@ -1,7 +1,10 @@
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
+  Row,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -9,6 +12,7 @@ import { useState } from "react";
 import "../../styles/ProductListPage.scss";
 import { ArrowUpDown } from "lucide-react";
 import Skeleton from "react-loading-skeleton";
+import Filters from "./Filters";
 
 type GobalTableProps<T> = {
   data: T[];
@@ -28,7 +32,9 @@ export function GlobalTable<T>({
   handleDeleteClick,
 }: GobalTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const skeletonRows = Array(5).fill(null);
+
   const {
     getHeaderGroups,
     getRowModel,
@@ -42,17 +48,21 @@ export function GlobalTable<T>({
   } = useReactTable({
     data,
     columns,
-    state: { sorting },
+    state: { sorting, columnFilters },
     onSortingChange: setSorting,
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    manualSorting: true,
     pageCount: Math.ceil(data.length / pagination! || 10),
-    manualPagination: false,
-    enableSorting: false
   });
 
   return (
     <div className="table-wrapper">
+      <Filters
+        columnFilters={columnFilters}
+        setColumnFilters={setColumnFilters}
+        keyFilter="name"
+      />
       <table className="product-table">
         <thead>
           {getHeaderGroups().map((headerGroup) => (
