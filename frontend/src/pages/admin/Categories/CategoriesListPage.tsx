@@ -91,7 +91,7 @@ const CategoriesListPage = () => {
   return (
     <div className="categories-list-container">
       <h2>Categories</h2>
-      <div className="search-bar">
+      {/* <div className="search-bar">
         <label htmlFor="search-input" className="search-label">
           Search:
         </label>
@@ -103,7 +103,7 @@ const CategoriesListPage = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="search-input"
         />
-      </div>
+      </div> */}
       <GlobalTable
         data={filteredCategories}
         columns={columns}

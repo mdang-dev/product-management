@@ -4,6 +4,9 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  PaginationState,
   Row,
   SortingState,
   useReactTable,
@@ -21,6 +24,7 @@ type GobalTableProps<T> = {
   pagination?: number;
   handleUpdateClick?: (item: T) => void;
   handleDeleteClick?: (item: T) => void;
+  filterKey?: string;
 };
 
 export function GlobalTable<T>({
@@ -30,11 +34,15 @@ export function GlobalTable<T>({
   pagination,
   handleUpdateClick,
   handleDeleteClick,
+  filterKey,
 }: GobalTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const skeletonRows = Array(5).fill(null);
-
+  const [paginationState, setPaginationState] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 5,
+  });
   const {
     getHeaderGroups,
     getRowModel,
@@ -44,16 +52,24 @@ export function GlobalTable<T>({
     getCanNextPage,
     getCanPreviousPage,
     nextPage,
+    getState,
     previousPage,
   } = useReactTable({
     data,
     columns,
-    state: { sorting, columnFilters },
+    state: {
+      sorting: sorting,
+      columnFilters: columnFilters,
+      pagination: paginationState,
+    },
     onSortingChange: setSorting,
+    onPaginationChange: setPaginationState,
     getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    pageCount: Math.ceil(data.length / pagination! || 10),
+    getSortedRowModel: getSortedRowModel(),
+    // pageCount: Math.ceil(data.length / pagination! || 10),
   });
 
   return (
@@ -61,7 +77,7 @@ export function GlobalTable<T>({
       <Filters
         columnFilters={columnFilters}
         setColumnFilters={setColumnFilters}
-        keyFilter="name"
+        filterKey={filterKey!}
       />
       <table className="product-table">
         <thead>
@@ -136,6 +152,39 @@ export function GlobalTable<T>({
               ))}
         </tbody>
       </table>
+      <div className="pagination">
+        <button
+          className="pagination-btn"
+          onClick={() => previousPage()}
+          disabled={!getCanPreviousPage()}
+        >
+          Previous
+        </button>
+
+        <span className="pagination-info">
+          Page {getState().pagination.pageIndex + 1} of {getPageCount()}
+        </span>
+
+        <button
+          className="pagination-btn"
+          onClick={nextPage}
+          disabled={!getCanNextPage()}
+        >
+          Next
+        </button>
+
+        <select
+          className="pagination-select"
+          value={getState().pagination.pageSize}
+          onChange={(e) => setPageSize(Number(e.target.value))}
+        >
+          {[5, 10, 20].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }

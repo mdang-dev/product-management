@@ -4,16 +4,16 @@ import React from "react";
 type FiltersProps = {
   columnFilters: ColumnFiltersState;
   setColumnFilters: React.Dispatch<React.SetStateAction<ColumnFiltersState>>;
-  keyFilter: string;
+  filterKey: string;
 };
 
 export default function Filters({
   columnFilters,
   setColumnFilters,
-  keyFilter,
+  filterKey,
 }: FiltersProps) {
   const valueFilter =
-    columnFilters.find((f) => f.id === keyFilter)?.value || "";
+    columnFilters.find((f) => f.id === filterKey)?.value || "";
 
   const onFilterChange = (id: string, value: string) => {
     setColumnFilters((prev) =>
@@ -36,7 +36,7 @@ export default function Filters({
         type="text"
         placeholder="Search products..."
         value={valueFilter as string}
-        onChange={(e) => onFilterChange(keyFilter, e.target.value)}
+        onChange={(e) => onFilterChange(filterKey, e.target.value)}
         className="search-input"
       />
     </div>

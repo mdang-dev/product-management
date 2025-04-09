@@ -25,16 +25,8 @@ const ProductListPage = () => {
   useEffect(() => {
     setTimeout(() => {
       setIdLoading(false);
-    }, 10000);
+    }, 1000);
   }, []);
-
-  const filteredProducts = useMemo(
-    () =>
-      products.filter((product) =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
-      ),
-    [products, searchTerm]
-  );
 
   const handleUpdateClick = useCallback((product: Product) => {
     setSelectedProduct(product);
@@ -116,24 +108,12 @@ const ProductListPage = () => {
   return (
     <div className="product-table-container">
       <h2>Product List</h2>
-      <div className="search-bar">
-        <label htmlFor="search-input" className="search-label">
-          Search:
-        </label>
-        <input
-          id="search-input"
-          type="text"
-          placeholder="Search products..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
-      </div>
 
       <GlobalTable
         columns={columns}
-        data={filteredProducts}
+        data={products}
         loading={isLoading}
+        filterKey="name"
         handleDeleteClick={handleDeleteClick}
         handleUpdateClick={handleUpdateClick}
       />
