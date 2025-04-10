@@ -1,13 +1,17 @@
-import { FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import "react-toastify/dist/ReactToastify.css";
 import "../../../styles/CategoriesFormPage.scss";
-import {
-  useSaveCategory,
-} from "../../../hooks/useCategoriesQuery";
+import { useSaveCategory } from "../../../hooks/useCategoriesQuery";
 import { toast } from "react-toastify";
-import { Input } from "../../../components/ui/Input";
+import {
+  Button,
+  ErrorText,
+  Label,
+  InputGroup,
+  Input,
+} from "../../../components/ui/index";
 
 type FormCategory = {
   name: string;
@@ -21,10 +25,9 @@ const schema = yup.object().shape({
 });
 
 const CategoriesFormPage: React.FC = () => {
-  
   const create = useSaveCategory();
 
-  const methods = useForm<FormCategory>({
+  const form = useForm<FormCategory>({
     resolver: yupResolver(schema),
     defaultValues: {
       name: "",
@@ -35,7 +38,7 @@ const CategoriesFormPage: React.FC = () => {
     create.mutate(data, {
       onSuccess: () => {
         toast.success("Category created successfully");
-        methods.reset();
+        form.reset();
       },
       onError: () => {
         toast.error("Failed to create category");
@@ -47,11 +50,20 @@ const CategoriesFormPage: React.FC = () => {
     <div className="categories-container">
       <div className="form-wrapper">
         <h2>Create Category</h2>
-
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <Input name="name" label="Name" placeholder="Name" />
-            <button type="submit">Submit</button>
+        <FormProvider {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <Controller
+              control={form.control}
+              name="name"
+              render={({ field, fieldState }) => (
+                <InputGroup>
+                  <Label>Name</Label>
+                  <Input {...field} placeholder="Enter category name" />
+                  <ErrorText>{fieldState.error?.message}</ErrorText>
+                </InputGroup>
+              )}
+            />
+            <Button type="submit">Add Category</Button>
           </form>
         </FormProvider>
       </div>

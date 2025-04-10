@@ -18,7 +18,6 @@ const ProductListPage = () => {
   const { data: products = [] } = useFetchProducts();
   const remove = useRemoveProduct();
   const update = useUpdateProduct();
-  const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isLoading, setIdLoading] = useState(true);
 
@@ -113,7 +112,6 @@ const ProductListPage = () => {
         columns={columns}
         data={products}
         loading={isLoading}
-        filterKey="name"
         handleDeleteClick={handleDeleteClick}
         handleUpdateClick={handleUpdateClick}
       />

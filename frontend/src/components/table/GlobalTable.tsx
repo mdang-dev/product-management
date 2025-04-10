@@ -6,6 +6,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  GlobalFilterTableState,
   PaginationState,
   Row,
   SortingState,
@@ -16,6 +17,7 @@ import "../../styles/ProductListPage.scss";
 import { ArrowUpDown } from "lucide-react";
 import Skeleton from "react-loading-skeleton";
 import Filters from "./Filters";
+import { ColumnVisibilityToggle } from "./ColumnVisibility";
 
 type GobalTableProps<T> = {
   data: T[];
@@ -24,7 +26,7 @@ type GobalTableProps<T> = {
   pagination?: number;
   handleUpdateClick?: (item: T) => void;
   handleDeleteClick?: (item: T) => void;
-  filterKey?: string;
+  filterKeys?: string[];
 };
 
 export function GlobalTable<T>({
@@ -34,15 +36,41 @@ export function GlobalTable<T>({
   pagination,
   handleUpdateClick,
   handleDeleteClick,
-  filterKey,
+  filterKeys,
 }: GobalTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const finalColumns = [
+    ...columns,
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }: { row: Row<T> }) => (
+        <div className="actions">
+          <button
+            className="edit-btn"
+            onClick={() => handleUpdateClick?.(row.original)}
+          >
+            Edit
+          </button>
+          <button
+            className="delete-btn"
+            onClick={() => handleDeleteClick?.(row.original)}
+          >
+            Delete
+          </button>
+        </div>
+      ),
+      enableHiding: true,
+    },
+  ];
+
   const skeletonRows = Array(5).fill(null);
   const [paginationState, setPaginationState] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 5,
   });
+  const [globalFilter, setGlobalFiter] = useState<string>("");
   const {
     getHeaderGroups,
     getRowModel,
@@ -54,13 +82,15 @@ export function GlobalTable<T>({
     nextPage,
     getState,
     previousPage,
+    getAllLeafColumns,
   } = useReactTable({
     data,
-    columns,
+    columns: finalColumns,
     state: {
       sorting: sorting,
       columnFilters: columnFilters,
       pagination: paginationState,
+      globalFilter: globalFilter,
     },
     onSortingChange: setSorting,
     onPaginationChange: setPaginationState,
@@ -69,16 +99,20 @@ export function GlobalTable<T>({
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    // pageCount: Math.ceil(data.length / pagination! || 10),
+    globalFilterFn: "includesString",
+    onGlobalFilterChange: setGlobalFiter,
   });
 
   return (
     <div className="table-wrapper">
-      <Filters
-        columnFilters={columnFilters}
-        setColumnFilters={setColumnFilters}
-        filterKey={filterKey!}
-      />
+      <div style={{ display: "flex", gap: "10px" }}>
+        <Filters
+          globalFilter={globalFilter}
+          setGlobalFilter={setGlobalFiter}
+          filterKeys={filterKeys}
+        />
+        <ColumnVisibilityToggle getAllLeafColumns={getAllLeafColumns} />
+      </div>
       <table className="product-table">
         <thead>
           {getHeaderGroups().map((headerGroup) => (
@@ -103,7 +137,6 @@ export function GlobalTable<T>({
                   </div>
                 </th>
               ))}
-              <th>Actions</th>
             </tr>
           ))}
         </thead>
@@ -132,22 +165,6 @@ export function GlobalTable<T>({
                       )}
                     </td>
                   ))}
-                  <td>
-                    <div className="actions">
-                      <button
-                        className="edit-btn"
-                        onClick={() => handleUpdateClick!(row.original)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="delete-btn"
-                        onClick={() => handleDeleteClick!(row.original)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
                 </tr>
               ))}
         </tbody>

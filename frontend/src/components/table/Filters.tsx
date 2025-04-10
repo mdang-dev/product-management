@@ -1,44 +1,62 @@
 import { ColumnFiltersState } from "@tanstack/react-table";
 import React from "react";
+import { Input } from "../ui/Input";
+import { Label } from "../ui/index";
+import { ColumnVisibilityToggle } from "./ColumnVisibility";
 
 type FiltersProps = {
-  columnFilters: ColumnFiltersState;
-  setColumnFilters: React.Dispatch<React.SetStateAction<ColumnFiltersState>>;
-  filterKey: string;
+  columnFilters?: ColumnFiltersState;
+  setColumnFilters?: React.Dispatch<React.SetStateAction<ColumnFiltersState>>;
+  filterKeys?: string[];
+  globalFilter?: string;
+  setGlobalFilter?: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export default function Filters({
   columnFilters,
   setColumnFilters,
-  filterKey,
+  filterKeys,
+  globalFilter,
+  setGlobalFilter,
 }: FiltersProps) {
   const valueFilter =
-    columnFilters.find((f) => f.id === filterKey)?.value || "";
+    filterKeys && filterKeys.length > 0
+      ? columnFilters?.find((f) => f.id === filterKeys[0])?.value
+      : globalFilter;
 
-  const onFilterChange = (id: string, value: string) => {
-    setColumnFilters((prev) =>
-      prev
-        .filter((f) => f.id !== id)
-        .concat({
-          id,
+  const onFilterChange = (value: string) => {
+    if (filterKeys && filterKeys.length > 0 && setColumnFilters) {
+      setColumnFilters!((prev) => {
+        const filtered = prev.filter((f) => !filterKeys.includes(f.id));
+        const newFilters = filterKeys.map((key) => ({
+          id: key,
           value,
-        })
-    );
+        }));
+        return [...filtered, ...newFilters];
+      });
+    } else {
+      setGlobalFilter!(value);
+    }
   };
 
   return (
     <div className="search-bar">
-      <label htmlFor="search-input" className="search-label">
+      <Label htmlFor="search-input" className="search-label">
         Search:
-      </label>
-      <input
+      </Label>
+      <Input
         id="search-input"
         type="text"
-        placeholder="Search products..."
+        placeholder={`${
+          filterKeys && filterKeys.length > 0
+            ? `Search by ${filterKeys?.join(", ")}`
+            : "Search all..."
+        }`}
         value={valueFilter as string}
-        onChange={(e) => onFilterChange(filterKey, e.target.value)}
+        onChange={(e) => onFilterChange(e.target.value)}
         className="search-input"
       />
+
     </div>
   );
 }

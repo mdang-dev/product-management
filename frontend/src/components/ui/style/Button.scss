@@ -1,0 +1,19 @@
+@use "sass:color";
+@use "./variables" as *;
+
+.button-custom {
+    background: $primary-color;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: 0.3s;
+    width: 200px;
+
+    &:hover {
+      background: color.adjust($primary-color, $lightness: -10%);
+    }
+  }
